@@ -4,8 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
 
 /**
  * The Catalog keeps track of all available tables in the database and their
@@ -17,13 +20,34 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Threadsafe
  */
 public class Catalog {
-
-    /**
+	
+	public class Table{
+		
+		public DbFile file;
+		public String name;
+		public String pkey;
+		
+		public Table(DbFile f, String n, String p){
+			this.file = f;
+			this.name = n;
+			this.pkey = p;
+		}
+		
+		public Table(DbFile f, String n){
+			this.file = f;
+			this.name = n;
+		}
+	
+	}
+	
+	private Map<Integer, Table> hm;
+	
+	/**
      * Constructor.
      * Creates a new, empty catalog.
      */
     public Catalog() {
-        // some code goes here
+    	hm = new HashMap<Integer, Table>();
     }
 
     /**
@@ -37,7 +61,29 @@ public class Catalog {
      *                  conflict exists, use the last table to be added as the table for a given name.
      */
     public void addTable(DbFile file, String name, String pkeyField) {
-        // some code goes here
+        if (file == null || name == null){
+        	throw new NullPointerException();
+        }
+        
+        int key = file.getId();
+        
+        Table value;
+        
+        if (pkeyField == null || pkeyField.equals("")){
+        	value = new Table(file, name);
+        }
+        else{
+        	value = new Table(file, name, pkeyField);
+        }
+        
+        if (hm.containsKey(key)){
+        	hm.replace(key, value);
+        }
+        else{
+        	hm.put(key, value);
+        }
+        
+        
     }
 
     public void addTable(DbFile file, String name) {
@@ -62,8 +108,12 @@ public class Catalog {
      * @throws NoSuchElementException if the table doesn't exist
      */
     public int getTableId(String name) throws NoSuchElementException {
-        // some code goes here
-        return 0;
+        for (int id: hm.keySet()){
+        	if (hm.get(id).name.equals(name)){
+        		return id;
+        	}
+        }
+        throw new NoSuchElementException();
     }
 
     /**
@@ -74,8 +124,11 @@ public class Catalog {
      * @throws NoSuchElementException if the table doesn't exist
      */
     public TupleDesc getTupleDesc(int tableid) throws NoSuchElementException {
-        // some code goes here
-        return null;
+        if (hm.containsKey(tableid)){
+        	return hm.get(tableid).file.getTupleDesc();
+        }
+        
+        throw new NoSuchElementException();
     }
 
     /**
@@ -87,22 +140,33 @@ public class Catalog {
      */
     public DbFile getDatabaseFile(int tableid) throws NoSuchElementException {
         // some code goes here
-        return null;
+    	if (hm.containsKey(tableid)){
+    		return hm.get(tableid).file;
+    	}
+        throw new NoSuchElementException();
     }
 
     public String getPrimaryKey(int tableid) {
         // some code goes here
-        return null;
+        if (hm.containsKey(tableid)){
+        	if (hm.get(tableid).pkey != null)
+        		return hm.get(tableid).pkey;
+        }
+        
+        throw new NoSuchElementException();
     }
 
     public Iterator<Integer> tableIdIterator() {
         // some code goes here
-        return null;
+        return hm.keySet().iterator();
     }
 
     public String getTableName(int id) {
         // some code goes here
-        return null;
+        if (hm.containsKey(id)){
+        	return hm.get(id).name;
+        }
+        throw new NoSuchElementException();
     }
 
     /**
@@ -110,6 +174,7 @@ public class Catalog {
      */
     public void clear() {
         // some code goes here
+    	hm = null;
     }
 
     /**

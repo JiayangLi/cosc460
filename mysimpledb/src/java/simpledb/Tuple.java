@@ -19,8 +19,16 @@ public class Tuple implements Serializable {
      * @param td the schema of this tuple. It must be a valid TupleDesc
      *           instance with at least one field.
      */
+    
+    private Field[] fieldArray;
+    private TupleDesc schema;
+    private RecordId id;
+    
     public Tuple(TupleDesc td) {
         // some code goes here
+    	fieldArray = new Field[td.numFields()];
+    	schema = td;  	
+    	
     }
 
     /**
@@ -28,7 +36,7 @@ public class Tuple implements Serializable {
      */
     public TupleDesc getTupleDesc() {
         // some code goes here
-        return null;
+        return schema;
     }
 
     /**
@@ -37,7 +45,7 @@ public class Tuple implements Serializable {
      */
     public RecordId getRecordId() {
         // some code goes here
-        return null;
+        return id;
     }
 
     /**
@@ -47,6 +55,7 @@ public class Tuple implements Serializable {
      */
     public void setRecordId(RecordId rid) {
         // some code goes here
+    	id = rid;
     }
 
     /**
@@ -56,7 +65,17 @@ public class Tuple implements Serializable {
      * @param f new value for the field.
      */
     public void setField(int i, Field f) {
-        // some code goes here
+        // some code goes here      
+    	if (i < 0 || i >= fieldArray.length)
+    		throw new IndexOutOfBoundsException();
+    	
+    	if (f == null)
+    		throw new NullPointerException();
+    	
+    	if (!schema.getFieldType(i).equals(f.getType()))
+    		throw new RuntimeException();
+    	
+    	fieldArray[i] = f;    	    	
     }
 
     /**
@@ -65,7 +84,7 @@ public class Tuple implements Serializable {
      */
     public Field getField(int i) {
         // some code goes here
-        return null;
+        return fieldArray[i];
     }
 
     /**
@@ -78,7 +97,12 @@ public class Tuple implements Serializable {
      */
     public String toString() {
         // some code goes here
-        throw new UnsupportedOperationException("Implement this");
+    	String s = "";
+    	
+    	for (int i = 0; i < fieldArray.length; i++){
+    		s += fieldArray[i].toString() + "\t";
+    	}
+        return s;
     }
 
 }
