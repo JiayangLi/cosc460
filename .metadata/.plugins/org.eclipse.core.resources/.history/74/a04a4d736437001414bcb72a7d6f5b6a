@@ -40,7 +40,7 @@ public class Catalog {
 	
 	}
 	
-	private HashMap<Integer, Table> hm;
+	private Map<Integer, Table> hm;
 	
 	/**
      * Constructor.
@@ -75,6 +75,8 @@ public class Catalog {
         else{
         	value = new Table(file, name, pkeyField);
         }
+        
+        if (hm == null) System.out.println(1234);
         
         if (hm.containsKey(key)){
         	hm.replace(key, value);
@@ -174,7 +176,7 @@ public class Catalog {
      */
     public void clear() {
         // some code goes here
-    	hm.clear();
+    	hm = null;
     }
 
     /**

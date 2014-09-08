@@ -21,7 +21,7 @@ import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
  */
 public class Catalog {
 	
-	public static class Table{
+	public class Table{
 		
 		public DbFile file;
 		public String name;
@@ -40,7 +40,7 @@ public class Catalog {
 	
 	}
 	
-	private HashMap<Integer, Table> hm;
+	private Map<Integer, Table> hm;
 	
 	/**
      * Constructor.
@@ -174,7 +174,7 @@ public class Catalog {
      */
     public void clear() {
         // some code goes here
-    	hm.clear();
+    	hm = null;
     }
 
     /**
