@@ -2,7 +2,6 @@ package simpledb;
 
 import java.util.*;
 import java.io.*;
-import java.math.BigInteger; 
 
 /**
  * Each instance of HeapPage stores data for one page of HeapFiles and
