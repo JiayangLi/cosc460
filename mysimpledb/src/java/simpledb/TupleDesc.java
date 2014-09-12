@@ -36,6 +36,10 @@ public class TupleDesc implements Serializable {
     }
 
     private static final long serialVersionUID = 1L;
+    
+    private TDItem[] TDarray;
+    private int numField = 0;
+    private int size = 0;
 
     /**
      * Create a new TupleDesc with typeAr.length fields with fields of the
@@ -46,13 +50,10 @@ public class TupleDesc implements Serializable {
      * @param fieldAr array specifying the names of the fields. Note that names may
      *                be null.
      */
-    
-    private TDItem[] TDarray;
-    private int numField = 0;
-    private int size = 0;
-    
     public TupleDesc(Type[] typeAr, String[] fieldAr) {
-        // some code goes here
+    	if (typeAr.length != fieldAr.length)
+    		throw new IllegalArgumentException("Type array incompatible with field array");
+    	
     	TDarray = new TDItem[typeAr.length];
     	for (int i = 0; i < typeAr.length; i++){
     		TDarray[i] = new TDItem(typeAr[i], fieldAr[i]);
@@ -69,7 +70,6 @@ public class TupleDesc implements Serializable {
      *               TupleDesc. It must contain at least one entry.
      */
     public TupleDesc(Type[] typeAr) {
-        // some code goes here
     	this(typeAr, new String[typeAr.length]);
     }
 
@@ -77,7 +77,6 @@ public class TupleDesc implements Serializable {
      * @return the number of fields in this TupleDesc
      */
     public int numFields() {
-        // some code goes here
         return numField;
     }
 
@@ -89,7 +88,6 @@ public class TupleDesc implements Serializable {
      * @throws NoSuchElementException if i is not a valid field reference.
      */
     public String getFieldName(int i) throws NoSuchElementException {
-        // some code goes here
     	if (i < numField){
     		return TDarray[i].fieldName;
     	}
@@ -107,7 +105,6 @@ public class TupleDesc implements Serializable {
      * @throws NoSuchElementException if i is not a valid field reference.
      */
     public Type getFieldType(int i) throws NoSuchElementException {
-        // some code goes here
     	if (i < numField){
     		return TDarray[i].fieldType;
     	}
@@ -124,7 +121,6 @@ public class TupleDesc implements Serializable {
      * @throws NoSuchElementException if no field with a matching name is found.
      */
     public int fieldNameToIndex(String name) throws NoSuchElementException {
-        // some code goes here
     	for (int i = 0; i < numField; i++){
     		if (this.getFieldName(i) != null && this.getFieldName(i).equals(name)){
     			return i;
@@ -138,7 +134,6 @@ public class TupleDesc implements Serializable {
      * Note that tuples from a given TupleDesc are of a fixed size.
      */
     public int getSize() {
-        // some code goes here
     	return size;
     }
 
@@ -151,7 +146,6 @@ public class TupleDesc implements Serializable {
      * @return the new TupleDesc
      */
     public static TupleDesc merge(TupleDesc td1, TupleDesc td2) {
-        // some code goes here
     	Type[] mergeType = new Type[td1.numFields() + td2.numFields()];
     	String[] mergeName = new String[td1.numFields() + td2.numFields()];
     	
@@ -181,8 +175,7 @@ public class TupleDesc implements Serializable {
      * @return true if the object is equal to this TupleDesc.
      */
     public boolean equals(Object o) {
-        // some code goes here
-    	if (o == null || o.getClass() != this.getClass()){
+    	if (o == null || !o.getClass().equals(this.getClass())){
     		return false;
     	}
     	
@@ -212,11 +205,10 @@ public class TupleDesc implements Serializable {
      * @return String describing this descriptor.
      */
     public String toString() {
-        // some code goes here
     	String s = "";
     	
     	for (int i = 0; i < this.numField; i++){
-    		s += this.getFieldName(i) + "(" + this.getFieldType(i) + "), ";
+    		s += TDarray[i].toString() + ", ";
     	}
     	
         return s.substring(0, s.length() - 2);
@@ -227,7 +219,6 @@ public class TupleDesc implements Serializable {
      * that are included in this TupleDesc
      */
     public Iterator<TDItem> iterator() {
-        // some code goes here
         return Arrays.asList(TDarray).iterator();
     }
 

@@ -12,6 +12,10 @@ import java.util.Iterator;
 public class Tuple implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    private Field[] fieldArray;
+    private TupleDesc td;
+    private RecordId id;
 
     /**
      * Create a new tuple with the specified schema (type).
@@ -19,15 +23,9 @@ public class Tuple implements Serializable {
      * @param td the schema of this tuple. It must be a valid TupleDesc
      *           instance with at least one field.
      */
-    
-    private Field[] fieldArray;
-    private TupleDesc schema;
-    private RecordId id;
-    
     public Tuple(TupleDesc td) {
-        // some code goes here
-    	fieldArray = new Field[td.numFields()];
-    	schema = td;  	
+    	this.fieldArray = new Field[td.numFields()];
+    	this.td = td;  	
     	
     }
 
@@ -35,8 +33,7 @@ public class Tuple implements Serializable {
      * @return The TupleDesc representing the schema of this tuple.
      */
     public TupleDesc getTupleDesc() {
-        // some code goes here
-        return schema;
+        return td;
     }
 
     /**
@@ -44,7 +41,6 @@ public class Tuple implements Serializable {
      * be null.
      */
     public RecordId getRecordId() {
-        // some code goes here
         return id;
     }
 
@@ -54,7 +50,6 @@ public class Tuple implements Serializable {
      * @param rid the new RecordId for this tuple.
      */
     public void setRecordId(RecordId rid) {
-        // some code goes here
     	id = rid;
     }
 
@@ -64,16 +59,15 @@ public class Tuple implements Serializable {
      * @param i index of the field to change. It must be a valid index.
      * @param f new value for the field.
      */
-    public void setField(int i, Field f) {
-        // some code goes here      
+    public void setField(int i, Field f) {   
     	if (i < 0 || i >= fieldArray.length)
     		throw new IndexOutOfBoundsException();
     	
     	if (f == null)
     		throw new NullPointerException();
     	
-    	if (!schema.getFieldType(i).equals(f.getType()))
-    		throw new RuntimeException();
+    	if (!td.getFieldType(i).equals(f.getType()))
+    		throw new RuntimeException("Incompatible types");
     	
     	fieldArray[i] = f;    	    	
     }
@@ -83,7 +77,6 @@ public class Tuple implements Serializable {
      * @return the value of the ith field, or null if it has not been set.
      */
     public Field getField(int i) {
-        // some code goes here
         return fieldArray[i];
     }
 
@@ -96,13 +89,12 @@ public class Tuple implements Serializable {
      * where \t is any whitespace, except newline
      */
     public String toString() {
-        // some code goes here
     	String s = "";
     	
     	for (int i = 0; i < fieldArray.length; i++){
     		s += fieldArray[i].toString() + "\t";
     	}
-        return s;
+        return s.trim();   //remove trailing tab
     }
 
 }

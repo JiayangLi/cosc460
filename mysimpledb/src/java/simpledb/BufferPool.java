@@ -30,8 +30,8 @@ public class BufferPool {
      */
     public static final int DEFAULT_PAGES = 50;
     
-    private HashMap<PageId, Page> cache;
-    private int numPages;
+    private HashMap<PageId, Page> cache;	//use a HashMap as cache
+    private int numPages;	//cache's size
 
     /**
      * Creates a BufferPool that caches up to numPages pages.
@@ -39,7 +39,6 @@ public class BufferPool {
      * @param numPages maximum number of pages in this buffer pool.
      */
     public BufferPool(int numPages) {
-        // some code goes here
     	cache = new HashMap<PageId, Page>();
     	this.numPages = numPages;
     }
@@ -70,20 +69,23 @@ public class BufferPool {
      */
     public Page getPage(TransactionId tid, PageId pid, Permissions perm)
             throws TransactionAbortedException, DbException {
-    	
+    	// if the requested page is already cached
     	if (cache.containsKey(pid)){
     		return cache.get(pid);
     	}
     	
+    	// if the cache is full
+    	if (cache.size() >= numPages)
+    		throw new DbException("exceeds the cache limit");
+    	
+    	// if the requested page is not cached and the cache is not full
+    	// read the page, and put it in the cache
     	int tableId = pid.getTableId();
-        
-    	if (cache.size() >= numPages){
-    		throw new DbException("exceeds max page");
-    	}
-    	else{
-    		return Database.getCatalog().getDatabaseFile(tableId).readPage(pid);
-    	}
+    	Page toReturn = Database.getCatalog().getDatabaseFile(tableId).readPage(pid);
+    	cache.put(pid, toReturn);
+    	return toReturn;
     }
+    
 
     /**
      * Releases the lock on a page.

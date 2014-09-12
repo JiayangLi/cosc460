@@ -21,18 +21,22 @@ import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
  */
 public class Catalog {
 	
-	public static class Table{
+	//private inner class representing table
+	private static class Table{
 		
-		public DbFile file;
-		public String name;
-		public String pkey;
+		private DbFile file;
+		private String name;
+		private String pkey;
 		
+		//constructor when there is a primary key
 		public Table(DbFile f, String n, String p){
 			this.file = f;
 			this.name = n;
 			this.pkey = p;
 		}
 		
+		//constructor when there is no primary key
+		//primary key is null
 		public Table(DbFile f, String n){
 			this.file = f;
 			this.name = n;
@@ -77,7 +81,7 @@ public class Catalog {
         }
         
         if (hm.containsKey(key)){
-        	hm.replace(key, value);
+        	hm.replace(key, value);   //name conflict, replace
         }
         else{
         	hm.put(key, value);
@@ -139,7 +143,6 @@ public class Catalog {
      *                function passed to addTable
      */
     public DbFile getDatabaseFile(int tableid) throws NoSuchElementException {
-        // some code goes here
     	if (hm.containsKey(tableid)){
     		return hm.get(tableid).file;
     	}
@@ -147,22 +150,22 @@ public class Catalog {
     }
 
     public String getPrimaryKey(int tableid) {
-        // some code goes here
         if (hm.containsKey(tableid)){
         	if (hm.get(tableid).pkey != null)
         		return hm.get(tableid).pkey;
+        	
+        	//throw an exception when this table's primary key is null
+        	throw new RuntimeException("No primary key for this table");
         }
         
         throw new NoSuchElementException();
     }
 
     public Iterator<Integer> tableIdIterator() {
-        // some code goes here
         return hm.keySet().iterator();
     }
 
     public String getTableName(int id) {
-        // some code goes here
         if (hm.containsKey(id)){
         	return hm.get(id).name;
         }
@@ -173,7 +176,6 @@ public class Catalog {
      * Delete all tables from the catalog
      */
     public void clear() {
-        // some code goes here
     	hm.clear();
     }
 
