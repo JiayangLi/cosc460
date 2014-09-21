@@ -17,6 +17,9 @@ public class HeapPage implements Page {
     final byte header[];
     final Tuple tuples[];
     final int numSlots;
+    
+    private boolean dirty;
+    private TransactionId tid;
 
     byte[] oldData;
     private final Byte oldDataLock = new Byte((byte) 0);
@@ -242,8 +245,17 @@ public class HeapPage implements Page {
      *                     already empty.
      */
     public void deleteTuple(Tuple t) throws DbException {
-        // some code goes here
-        // not necessary for lab1
+    	if (t == null)
+    		throw new NullPointerException();
+        if (!t.getRecordId().getPageId().equals(this.pid))
+        	throw new DbException("Tuple is found in this page");
+        
+        int tupleNo = t.getRecordId().tupleno();
+        
+        if (!isSlotUsed(tupleNo))
+        	throw new DbException("Slot already empty");
+        
+        markSlotUsed(tupleNo, false);
     }
 
     /**
@@ -255,26 +267,49 @@ public class HeapPage implements Page {
      *                     is mismatch.
      */
     public void insertTuple(Tuple t) throws DbException {
-        // some code goes here
-        // not necessary for lab1
+        if (t == null)
+        	throw new NullPointerException();
+        if (getNumEmptySlots() == 0)
+        	throw new DbException("No empty slot on this page");
+        
+        int i = 0;
+        for (;i < numSlots; i++){
+        	if (!isSlotUsed(i))
+        		break;
+        }
+                
+        RecordId newId = new RecordId(this.pid, i);
+        
+        t.setRecordId(newId);
+        
+        tuples[i] = t;
+        
+        markSlotUsed(i, true);
     }
 
     /**
      * Marks this page as dirty/not dirty and record that transaction
      * that did the dirtying
      */
-    public void markDirty(boolean dirty, TransactionId tid) {
-        // some code goes here
-        // not necessary for lab1
+    public void markDirty(boolean dirty, TransactionId tid) {   
+    	
+        this.dirty = dirty;
+        if (this.dirty){		
+        	this.tid = tid;		//record tid if tid marks this page as dirty
+        }
+        else{
+        	this.tid = null;
+        }
     }
 
     /**
      * Returns the tid of the transaction that last dirtied this page, or null if the page is not dirty
      */
     public TransactionId isDirty() {
-        // some code goes here
-        // Not necessary for lab1
-        return null;      
+        if (dirty)
+        	return tid;
+        else 
+        	return null;
     }
     
     /**
@@ -307,8 +342,19 @@ public class HeapPage implements Page {
      * Abstraction to fill or clear a slot on this page.
      */
     private void markSlotUsed(int i, boolean value) {
-        // some code goes here
-        // not necessary for lab1
+        if (i >= numSlots || i < 0)
+        	throw new NoSuchElementException("No such slot");
+        
+        int byteNo = i / 8;
+        int bitNo = i % 8;
+        
+        // mark 1
+        if (value == true){
+        	header[byteNo] = (byte) (header[byteNo] | (1 << bitNo));
+        }
+        else{ // mark 0
+        	header[byteNo] = (byte) (header[byteNo] & ((int) 255 - (1 << bitNo)));
+        }
     }
 
     /**

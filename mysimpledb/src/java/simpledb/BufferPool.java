@@ -2,7 +2,9 @@ package simpledb;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.ArrayList;
 
 /**
  * BufferPool manages the reading and writing of pages into memory from
@@ -16,6 +18,22 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Threadsafe, all fields are final
  */
 public class BufferPool {
+	/*
+	//private class to represent page and the most recent time it got accessed
+	private static class TimedPage{
+		private Page pg;
+		private long time;
+		
+		public TimedPage(Page pg){
+			this.pg = pg;
+			this.time = System.currentTimeMillis();
+		}
+		
+		public void updateTime(){
+			this.time = System.currentTimeMillis();
+		}
+	}*/
+	
     /**
      * Bytes per page, including header.
      */
@@ -31,6 +49,7 @@ public class BufferPool {
     public static final int DEFAULT_PAGES = 50;
     
     private HashMap<PageId, Page> cache;	//use a HashMap as cache
+    private HashMap<PageId, Long> times;	//use a HashMap to keep track of access times	
     private int numPages;	//cache's size
 
     /**
@@ -40,6 +59,7 @@ public class BufferPool {
      */
     public BufferPool(int numPages) {
     	cache = new HashMap<PageId, Page>();
+    	times = new HashMap<PageId, Long>();
     	this.numPages = numPages;
     }
 
@@ -51,6 +71,17 @@ public class BufferPool {
     public static void setPageSize(int pageSize) {
         BufferPool.pageSize = pageSize;
     }
+    
+    /**
+     * Update the access time for a given page
+     * @param pid	the ID of the page whose acces time needs updating
+     */
+    private void updateTime(PageId pid){
+    	if (!times.containsKey(pid))
+    		throw new NoSuchElementException("page not in cache");
+    	
+    	times.put(pid, System.currentTimeMillis());
+    } 
 
     /**
      * Retrieve the specified page with the associated permissions.
@@ -71,18 +102,20 @@ public class BufferPool {
             throws TransactionAbortedException, DbException {
     	// if the requested page is already cached
     	if (cache.containsKey(pid)){
+    		updateTime(pid);
     		return cache.get(pid);
     	}
     	
-    	// if the cache is full
-    	if (cache.size() >= numPages)
-    		throw new DbException("exceeds the cache limit");
+    	// if the cache is full, evictPage
+    	while (cache.size() >= numPages){
+    		evictPage();
+    	}
     	
-    	// if the requested page is not cached and the cache is not full
     	// read the page, and put it in the cache
     	int tableId = pid.getTableId();
     	Page toReturn = Database.getCatalog().getDatabaseFile(tableId).readPage(pid);
     	cache.put(pid, toReturn);
+    	times.put(pid, System.currentTimeMillis());
     	return toReturn;
     }
     
@@ -149,8 +182,20 @@ public class BufferPool {
      */
     public void insertTuple(TransactionId tid, int tableId, Tuple t)
             throws DbException, IOException, TransactionAbortedException {
-        // some code goes here
-        // not necessary for lab1
+        if (tid == null || t == null)
+        	throw new NullPointerException();
+        
+        DbFile table = Database.getCatalog().getDatabaseFile(tableId);
+                
+        //there should only be one page in the ArrayList
+        //HeapFile.insertTuple calls getPage, which updates the access time
+        Page pg = table.insertTuple(tid, t).get(0);
+        
+        //markDirty that page
+        pg.markDirty(true, tid);
+        
+        //update cache
+        cache.put(pg.getId(), pg);
     }
 
     /**
@@ -167,8 +212,22 @@ public class BufferPool {
      */
     public void deleteTuple(TransactionId tid, Tuple t)
             throws DbException, IOException, TransactionAbortedException {
-        // some code goes here
-        // not necessary for lab1
+    	if (tid == null || t == null)
+    		throw new NullPointerException();
+    	
+    	//find the page where t is located
+    	PageId pid = t.getRecordId().getPageId();
+    	DbFile table =  Database.getCatalog().getDatabaseFile(pid.getTableId());
+    	
+    	//there should only be one page in the ArrayList
+    	//HeapFile.deleteTuple calls getPage, which updates the access time
+    	Page pg = table.deleteTuple(tid, t).get(0);
+    	
+    	//markDirty that page
+    	pg.markDirty(true, tid);
+    	
+    	//update the cache
+    	cache.put(pid, pg);
     }
 
     /**
@@ -177,9 +236,11 @@ public class BufferPool {
      * break simpledb if running in NO STEAL mode.
      */
     public synchronized void flushAllPages() throws IOException {
-        // some code goes here
-        // not necessary for lab1
-
+    	//pass every pid into flushPage
+    	//check dirty done in flushPage
+    	for (PageId pid: cache.keySet()){
+    		flushPage(pid);
+    	}
     }
 
     /**
@@ -199,8 +260,23 @@ public class BufferPool {
      * @param pid an ID indicating the page to flush
      */
     private synchronized void flushPage(PageId pid) throws IOException {
-        // some code goes here
-        // not necessary for lab1
+        if (pid == null)
+        	throw new NullPointerException();
+        if (!cache.containsKey(pid))
+        	throw new NoSuchElementException("page to flush not in cache");
+        
+        Page pageToFlush = cache.get(pid);
+        
+        //check if dirty
+        if (pageToFlush.isDirty() != null){
+            DbFile table = Database.getCatalog().getDatabaseFile(pid.getTableId());
+            
+            //mark the page as not dirty
+            pageToFlush.markDirty(false, null);
+            
+            //flush the page to disk
+            table.writePage(pageToFlush);
+        }
     }
 
     /**
@@ -216,8 +292,27 @@ public class BufferPool {
      * Flushes the page to disk to ensure dirty pages are updated on disk.
      */
     private synchronized void evictPage() throws DbException {
-        // some code goes here
-        // not necessary for lab1
+        //Find the least recently used page
+    	long LRUtime = 0;
+    	PageId LRUid = null;
+    	
+    	for (PageId pid: times.keySet()){
+    		if (times.get(pid) > LRUtime){
+    			LRUid = pid;
+    		}
+    	}
+    	
+    	//flush the page
+    	try{
+    		flushPage(LRUid);
+    	}
+    	catch (IOException e){
+    		e.printStackTrace();
+    	}
+    	 	
+    	//remove from cache
+    	cache.remove(LRUid);
+    	times.remove(LRUid);
     }
 
 }

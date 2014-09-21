@@ -5,21 +5,25 @@ After you complete lab 1, please answer the following questions.  For lab 1, the
 
 1. What is your name?  If you work with a partner, be sure to write both of your names.
 
-<Replace this text with your answer>
+Jiayang(JY) Li
 
 2. What did you think of this assignment?
 
-<Replace this text with your answer>
+I don't think the entire assignment is terribly hard in terms of actual coding. It's the
+large code base that makes it hard to navigate through the different parts and take into
+consideration those different pieces when I wrote one class.
+
+The part about bit manipulation is new to me, but the tutorial is very helpful!
 
 3. What was the hardest part of this assignment?
 
-<Replace this text with your answer>
+Coming up with the right data structure and manipulating bits.
 
 4. Describe any missing or incomplete elements of your code.
 
-<Replace this text with your answer>
+I don't think there is any.
 
 5. Roughly how long did you spend working on this lab?
 
-<Replace this text with your answer>
+About 3 hours.
 

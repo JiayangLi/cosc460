@@ -30,7 +30,7 @@ public class Catalog {
 		
 		//constructor when there is a primary key
 		public Table(DbFile f, String n, String p){
-			this.file = f;
+			this.file = f;	
 			this.name = n;
 			this.pkey = p;
 		}
