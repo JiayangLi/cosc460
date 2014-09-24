@@ -24,24 +24,16 @@ Answer the questions from the lab description here.  Questions 8 and 9 do not re
 		iterS.rewind()
 	return list
 	
-7.	
-		if t1 == null and iterR.hasNext()
+7.	while iterR.hasNext()
+		if t1 == null
 			t1 = iterR.next()
-		if not iterR.hasNext() and not iterS.hasNext()
-			return null
 			
-	do	
 		while iterS.hasNext()
 			t2 = iterS.next()
 			if t1 and t2 match join predicate
 				return merge(t1,t2)
 		iterR.rewind()
-		if iterR.hasNext()
-			t1 = iteR.next()
-		else
-			break
-	while True
-	
+		t1 = iteR.next()
 	return null		
 	
 
