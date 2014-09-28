@@ -28,21 +28,24 @@ Answer the questions from the lab description here.  Questions 8 and 9 do not re
 		if t1 == null and iterR.hasNext()
 			t1 = iterR.next()
 		if not iterR.hasNext() and not iterS.hasNext()
-			return null
-			
-	do	
-		while iterS.hasNext()
-			t2 = iterS.next()
 			if t1 and t2 match join predicate
 				return merge(t1,t2)
-		iterR.rewind()
-		if iterR.hasNext()
-			t1 = iteR.next()
-		else
-			break
-	while True
-	
-	return null		
+			else
+				return null
+			
+		do	
+			while iterS.hasNext()
+				t2 = iterS.next()
+				if t1 and t2 match join predicate
+					return merge(t1,t2)
+			iterR.rewind()
+			if iterR.hasNext()
+				t1 = iteR.next()
+			else
+				break
+		while True
+		
+		return null		
 	
 
 After you complete lab 3, please answer the following questions.  

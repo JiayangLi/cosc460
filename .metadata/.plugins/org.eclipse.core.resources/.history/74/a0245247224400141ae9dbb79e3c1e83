@@ -1,0 +1,69 @@
+Report for Lab 3
+----------------
+
+Answer the questions from the lab description here.  Questions 8 and 9 do not require answers.
+
+1. Operator, SeqScan, TupleIterator
+2. Aggregate, Delete, Filter, HashEquiJoin, Insert, Join, OrderBy, Project
+3. Select, project and join are supported.
+4. Because Filter extends Operator, which already implements next and hasNext
+
+5.  while iterR.hasNext()
+		t = iterR.next()
+		if t matches predicate
+			return t
+	next null
+	
+6.  list = []
+	while iterR.hasNext()
+		t = iterR.next()
+		while iterS.hasNext()
+			s = iterS.next()
+			if t and s match join predicate
+				list.append(merge(t,s))
+		iterS.rewind()
+	return list
+	
+7.	
+		if t1 == null and iterR.hasNext()
+			t1 = iterR.next()
+		if not iterR.hasNext() and not iterS.hasNext()
+			return null
+			
+	do	
+		while iterS.hasNext()
+			t2 = iterS.next()
+			if t1 and t2 match join predicate
+				return merge(t1,t2)
+		iterR.rewind()
+		if iterR.hasNext()
+			t1 = iteR.next()
+		else
+			break
+	while True
+	
+	return null		
+	
+
+After you complete lab 3, please answer the following questions.  
+
+1. What is your name?  If you work with a partner, be sure to write both of your names.
+
+Jiayang(JY) Li. Partner: David Huang
+
+2. What did you think of this assignment?
+
+<Replace this text with your answer>
+
+3. What was the hardest part of this assignment?
+
+<Replace this text with your answer>
+
+4. Describe any missing or incomplete elements of your code.
+
+<Replace this text with your answer>
+
+5. Roughly how long did you spend working on this lab?
+
+<Replace this text with your answer>
+

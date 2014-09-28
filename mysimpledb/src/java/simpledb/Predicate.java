@@ -96,9 +96,7 @@ public class Predicate implements Serializable {
         if (t == null)
         	throw new NullPointerException();
         
-        if (t.getField(fieldNo).compare(op, operand))
-        	return true;
-        return false;
+        return t.getField(fieldNo).compare(op, operand);
     }
 
     /**
