@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="InsertTest (1)" project="mysimpledb" tests="4" started="4" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.systemtest.InsertTest" time="0.04">
+    <testcase name="testEmptyToEmpty" classname="simpledb.systemtest.InsertTest" time="0.031"/>
+    <testcase name="testEmptyToOne" classname="simpledb.systemtest.InsertTest" time="0.003"/>
+    <testcase name="testOneToEmpty" classname="simpledb.systemtest.InsertTest" time="0.003"/>
+    <testcase name="testOneToOne" classname="simpledb.systemtest.InsertTest" time="0.003"/>
+  </testsuite>
+</testrun>

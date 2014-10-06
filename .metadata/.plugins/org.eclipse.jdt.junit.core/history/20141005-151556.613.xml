@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="InsertTest" project="mysimpledb" tests="2" started="2" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.InsertTest" time="0.027">
+    <testcase name="getTupleDesc" classname="simpledb.InsertTest" time="0.024"/>
+    <testcase name="getNext" classname="simpledb.InsertTest" time="0.003"/>
+  </testsuite>
+</testrun>

@@ -13,7 +13,7 @@ public class Delete extends Operator {
     private TransactionId tid;
     private DbIterator dbi;
     private boolean fetchable;
-    private TupleDesc td;
+    private Tuple rv;
 
     /**
      * Constructor specifying the transaction that this delete belongs to as
@@ -25,12 +25,12 @@ public class Delete extends Operator {
     public Delete(TransactionId t, DbIterator child) {
         this.tid = t;
         this.dbi = child;
-        this.td = new TupleDesc(new Type[]{Type.INT_TYPE}, new String[]{"Counts"});
+        this.rv = new Tuple(new TupleDesc(new Type[]{Type.INT_TYPE}, new String[]{"Counts"}));
         this.fetchable = true;
     }
 
     public TupleDesc getTupleDesc() {
-        return td;
+        return rv.getTupleDesc();
     }
 
     public void open() throws DbException, TransactionAbortedException {
@@ -75,7 +75,6 @@ public class Delete extends Operator {
         
         fetchable = false;
         
-        Tuple rv = new Tuple(td);
         rv.setField(0, new IntField(count));
         
         return rv;
