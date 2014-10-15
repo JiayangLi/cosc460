@@ -17,23 +17,7 @@ import java.util.ArrayList;
  *
  * @Threadsafe, all fields are final
  */
-public class BufferPool {
-	/*
-	//private class to represent page and the most recent time it got accessed
-	private static class TimedPage{
-		private Page pg;
-		private long time;
-		
-		public TimedPage(Page pg){
-			this.pg = pg;
-			this.time = System.currentTimeMillis();
-		}
-		
-		public void updateTime(){
-			this.time = System.currentTimeMillis();
-		}
-	}*/
-	
+public class BufferPool {	
     /**
      * Bytes per page, including header.
      */
@@ -293,11 +277,11 @@ public class BufferPool {
      */
     private synchronized void evictPage() throws DbException {
         //Find the least recently used page
-    	long LRUtime = 0;
+    	long LRUtime = Long.MAX_VALUE;
     	PageId LRUid = null;
     	
     	for (PageId pid: times.keySet()){
-    		if (times.get(pid) > LRUtime){
+    		if (times.get(pid) < LRUtime){
     			LRUid = pid;
     		}
     	}

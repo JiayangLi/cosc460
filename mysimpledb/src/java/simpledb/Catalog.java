@@ -6,9 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
-import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
 
 /**
  * The Catalog keeps track of all available tables in the database and their
@@ -80,12 +78,8 @@ public class Catalog {
         	value = new Table(file, name, pkeyField);
         }
         
-        if (hm.containsKey(key)){
-        	hm.replace(key, value);   //name conflict, replace
-        }
-        else{
-        	hm.put(key, value);
-        }
+        hm.put(key, value);
+        
         
         
     }

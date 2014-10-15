@@ -391,6 +391,10 @@ public class HeapPage implements Page {
     		currIdx++;	//increment currIdx, so that it can get to next tuple
     		return toReturn;    		
     	}
+
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
     }
     
 
