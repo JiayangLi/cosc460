@@ -1,0 +1,167 @@
+package simpledb;
+
+import java.util.Arrays;
+
+/**
+ * A class to represent a fixed-width histogram over a single integer-based field.
+ */
+public class IntHistogram {
+	
+	private int min;
+	private int max;
+	public int total;
+	private int[] buckets;
+	public int otherWidth;
+	public int lastWidth;
+	
+    /**
+     * Create a new IntHistogram.
+     * <p/>
+     * This IntHistogram should maintain a histogram of integer values that it receives.
+     * It should split the histogram into "buckets" buckets.
+     * <p/>
+     * The values that are being histogrammed will be provided one-at-a-time through the "addValue()" function.
+     * <p/>
+     * Your implementation should use space and have execution time that are both
+     * constant with respect to the number of values being histogrammed.  For example, you shouldn't
+     * simply store every value that you see in a sorted list.
+     *
+     * @param buckets The number of buckets to split the input value into.
+     * @param min     The minimum integer value that will ever be passed to this class for histogramming
+     * @param max     The maximum integer value that will ever be passed to this class for histogramming
+     */
+    public IntHistogram(int buckets, int min, int max) {
+        this.min = min;
+        this.max = max;
+        buckets = Math.min(buckets, max - min + 1);
+        this.buckets = new int[buckets];   
+        otherWidth = (int) Math.floor((max - min + 1)/ (double) buckets);
+        lastWidth = max - otherWidth * (buckets -1);
+        
+    }
+    
+    /**
+     * A private helper function to find the index of a specified value in the histogram.
+     * The value passed in must be within range.
+     * @param v Value whose index needs to be found
+     * @return	the index of the given value
+     */
+    private int findIndex(int v){
+    	int index = (v - min) / otherWidth;
+    	
+    	if (index >= buckets.length){
+    		return index - 1;
+    	}
+    	else{
+    		return index;
+    	}
+    }
+
+    /**
+     * Add a value to the set of values that you are keeping a histogram of.
+     *
+     * @param v Value to add to the histogram
+     */
+    public void addValue(int v) {
+        if (v > max || v < min)
+        	throw new RuntimeException("given value not in valid range");
+        
+        int index = findIndex(v);
+        
+        buckets[index]++;
+        
+        total++;
+    }
+    
+    /**
+     * A helper function to estimate selectivity when the operation is EQUALS
+     * @param v Value
+     * @return Predicted selectivity
+     */
+    private double equals(int v){
+    	if (v > max || v < min)
+			return 0.0;
+		else{
+			int index = findIndex(v);
+			if (index == buckets.length - 1){	//last bucket
+				return (buckets[index] / (double) lastWidth) / total;
+			}
+			else{	//other buckets
+				return (buckets[index] / (double) otherWidth) / total;
+			}
+		}
+    }
+    
+    /**
+     * A helper function to estimate selectivity when the operation is GREATER_THAN
+     * @param v Value
+     * @return 	Predicated selectivity
+     */
+    private double greaterThan(int v){
+    	if (v > max)
+			return 0.0;
+		if (v < min)
+			return 1.0;
+		
+		//value within range
+		int index = findIndex(v);
+		
+		if (index == buckets.length - 1){	//last bucket
+			return ((max - v) / (double) buckets[index]) * (buckets[index] / (double) total);
+		}
+		else{	//other buckets
+			double selectivity = 0.0;
+			selectivity += (((index + 1) * otherWidth - 1 - v) / (double) otherWidth) * (buckets[index] / (double) total);
+			for (int i = index + 1; i < buckets.length; i++){
+				selectivity += buckets[i] / (double) total;				
+			}
+			return selectivity;
+		}
+    }
+
+    /**
+     * Estimate the selectivity of a particular predicate and operand on this table.
+     * <p/>
+     * For example, if "op" is "GREATER_THAN" and "v" is 5,
+     * return your estimate of the fraction of elements that are greater than 5.
+     *
+     * @param op Operator
+     * @param v  Value
+     * @return Predicted selectivity of this particular operator and value
+     */
+    public double estimateSelectivity(Predicate.Op op, int v) {
+    	switch (op){
+    		case EQUALS:
+    			return equals(v);
+    		case GREATER_THAN:
+    			return greaterThan(v);
+    		case LESS_THAN:
+    			return 1 - greaterThan(v) - equals(v);
+    		case LESS_THAN_OR_EQ:
+    			return 1 - greaterThan(v);
+    		case GREATER_THAN_OR_EQ:
+    			return greaterThan(v) + equals(v);
+    		case LIKE:
+    			return equals(v);
+    		case NOT_EQUALS:
+    			return 1 - equals(v);
+    		default:
+    			return -1.0;		//should not happen
+    	}	
+    }
+    
+    /**
+     * @return A string describing this histogram, for debugging purposes
+     */
+    public String toString() {
+        return Arrays.toString(buckets);
+    }
+    
+//    public static void main(String[] args){
+//    	IntHistogram ih = new IntHistogram(5, 0 ,27);
+//    	System.out.println(ih.otherWidth);
+//    	System.out.println(ih.lastWidth);
+//    	ih.addValue(24);
+//    	System.out.println(ih.toString());
+//    }
+}

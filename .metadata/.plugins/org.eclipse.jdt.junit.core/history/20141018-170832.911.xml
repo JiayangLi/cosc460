@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="IntHistogramTest" project="mysimpledb" tests="12" started="12" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.IntHistogramTest" time="0.175">
+    <testcase name="extraBuckets" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="orderOfGrowthTest" classname="simpledb.IntHistogramTest" time="0.173"/>
+    <testcase name="negativeRangeTest" classname="simpledb.IntHistogramTest" time="0.001"/>
+    <testcase name="opEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opLessThanTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opLessThanOrEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opGreaterThanTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opGreaterThanOrEqualsTest" classname="simpledb.IntHistogramTest" time="0.001"/>
+    <testcase name="opNotEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="uniformTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="uniformTestWithRange" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="testLargeLastBin" classname="simpledb.IntHistogramTest" time="0.0"/>
+  </testsuite>
+</testrun>

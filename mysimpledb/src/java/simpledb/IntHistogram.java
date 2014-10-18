@@ -1,10 +1,19 @@
 package simpledb;
 
+import java.util.Arrays;
+
 /**
  * A class to represent a fixed-width histogram over a single integer-based field.
  */
 public class IntHistogram {
-
+	
+	private int min;
+	private int max;
+	public int total;
+	private int[] buckets;
+	public int otherWidth;
+	public int lastWidth;
+	
     /**
      * Create a new IntHistogram.
      * <p/>
@@ -22,7 +31,30 @@ public class IntHistogram {
      * @param max     The maximum integer value that will ever be passed to this class for histogramming
      */
     public IntHistogram(int buckets, int min, int max) {
-        // some code goes here
+        this.min = min;
+        this.max = max;
+        buckets = Math.min(buckets, max - min + 1);
+        this.buckets = new int[buckets];   
+        otherWidth = (int) Math.floor((max - min + 1)/ (double) buckets);
+        lastWidth = max - (min + otherWidth * (buckets -1)) + 1;
+        
+    }
+    
+    /**
+     * A private helper function to find the index of a specified value in the histogram.
+     * The value passed in must be within range.
+     * @param v Value whose index needs to be found
+     * @return	the index of the given value
+     */
+    private int findIndex(int v){
+    	int index = (v - min) / otherWidth;
+    	
+    	if (index >= buckets.length){
+    		return index - 1;
+    	}
+    	else{
+    		return index;
+    	}
     }
 
     /**
@@ -31,7 +63,60 @@ public class IntHistogram {
      * @param v Value to add to the histogram
      */
     public void addValue(int v) {
-        // some code goes here
+        if (v > max || v < min)
+        	throw new RuntimeException("given value not in valid range");
+        
+        int index = findIndex(v);
+        
+        buckets[index]++;
+        
+        total++;
+    }
+    
+    /**
+     * A helper function to estimate selectivity when the operation is EQUALS
+     * @param v Value
+     * @return Predicted selectivity
+     */
+    private double equals(int v){
+    	if (v > max || v < min)
+			return 0.0;
+		else{
+			int index = findIndex(v);
+			if (index == buckets.length - 1){	//last bucket
+				return (buckets[index] / (double) lastWidth) / total;
+			}
+			else{	//other buckets
+				return (buckets[index] / (double) otherWidth) / total;
+			}
+		}
+    }
+    
+    /**
+     * A helper function to estimate selectivity when the operation is GREATER_THAN
+     * @param v Value
+     * @return 	Predicated selectivity
+     */
+    private double greaterThan(int v){
+    	if (v > max)
+			return 0.0;
+		if (v < min)
+			return 1.0;
+		
+		//value within range
+		int index = findIndex(v);
+		
+		if (index == buckets.length - 1){	//last bucket
+			return ((max - v) / (double) lastWidth) * (buckets[index] / (double) total);
+		}
+		else{	//other buckets
+			double selectivity = 0.0;
+			selectivity += ((((index + 1) * otherWidth + min) - 1 - v) / (double) otherWidth) * (buckets[index] / (double) total);
+			for (int i = index + 1; i < buckets.length; i++){
+				selectivity += buckets[i] / (double) total;				
+			}
+			return selectivity;
+		}
     }
 
     /**
@@ -45,16 +130,30 @@ public class IntHistogram {
      * @return Predicted selectivity of this particular operator and value
      */
     public double estimateSelectivity(Predicate.Op op, int v) {
-
-        // some code goes here
-        return -1.0;
+    	switch (op){
+    		case EQUALS:
+    			return equals(v);
+    		case GREATER_THAN:
+    			return greaterThan(v);
+    		case LESS_THAN:
+    			return 1 - greaterThan(v) - equals(v);
+    		case LESS_THAN_OR_EQ:
+    			return 1 - greaterThan(v);
+    		case GREATER_THAN_OR_EQ:
+    			return greaterThan(v) + equals(v);
+    		case LIKE:
+    			return equals(v);
+    		case NOT_EQUALS:
+    			return 1 - equals(v);
+    		default:
+    			throw new UnsupportedOperationException("invalid operation");
+    	}	
     }
-
+    
     /**
      * @return A string describing this histogram, for debugging purposes
      */
     public String toString() {
-        // some code goes here
-        return null;
+        return Arrays.toString(buckets);
     }
 }

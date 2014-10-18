@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="IntHistogramTest" project="mysimpledb" tests="12" started="12" failures="1" errors="0" ignored="0">
+  <testsuite name="simpledb.IntHistogramTest" time="0.174">
+    <testcase name="orderOfGrowthTest" classname="simpledb.IntHistogramTest" time="0.169"/>
+    <testcase name="extraBuckets" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="negativeRangeTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opEqualsTest" classname="simpledb.IntHistogramTest" time="0.001"/>
+    <testcase name="opLessThanTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opLessThanOrEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opGreaterThanTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opGreaterThanOrEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opNotEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="uniformTest" classname="simpledb.IntHistogramTest" time="0.001"/>
+    <testcase name="uniformTestWithRange" classname="simpledb.IntHistogramTest" time="0.002">
+      <failure>java.lang.AssertionError: expected:&lt;0.25&gt; but was:&lt;0.375&gt;
+	at org.junit.Assert.fail(Assert.java:91)
+	at org.junit.Assert.failNotEquals(Assert.java:618)
+	at org.junit.Assert.assertEquals(Assert.java:414)
+	at org.junit.Assert.assertEquals(Assert.java:483)
+	at simpledb.IntHistogramTest.uniformTestWithRange(IntHistogramTest.java:243)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+
+</failure>
+    </testcase>
+    <testcase name="testLargeLastBin" classname="simpledb.IntHistogramTest" time="0.0"/>
+  </testsuite>
+</testrun>
