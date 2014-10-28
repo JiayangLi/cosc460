@@ -1,0 +1,41 @@
+Questions
+---------
+
+Answer these questions.  With each question is a hint as to which part of the code walk you might consult to find the answer.
+
+(Walk thru 1) How many instances of the TableStats class are created?
+
+	The number of tables in the catalog.
+
+(Walk thru 4) In class, we said a logical plan is a relational algebra tree.  That's not how it's represented in SimpleDB.  How is it represented?
+
+	A logical plan is a collection of scan nodes, filter nodes, join nodes and select, in addition to an aggregate and group by field. 
+
+(Walk thru 5) The physicalPlan is a relational algebra tree.  Describe the basic shape of this tree in terms of which ops go where.
+
+	The operations in the tree are (from bottom to top): seqscan on base tables, filter(relational algebra select), join and project.
+
+(Walk thru 5) Suppose a query applies multiple filters to a single table.  For example, the query described in the lab write up filters on both actor first and last name.  In such cases, how is the selectivity estimated?  
+
+	Prior to any filter, the filterSelectivity for a table is 1.0 because of the seqscan. As the first filter is applied to the table, the selectivity for this specific filter predicate is first calculated using the
+	table's stats. Then the new filterSelectivity will be the product of the previous filterSelectivity and selectivity for this specific filter that we have just calculated. This process repeats for every filters on 
+	one table. The final filterSelectivity of a table is the product of the selectivity of all filters on this table.
+	
+(Walk thru 5) Explain the meaning of this if statement.  Why should the subplanMap have size 0 or 1 at this point?
+
+    if (subplanMap.size() > 1) {
+        throw new ParsingException("Query does not include join expressions joining all nodes!");
+    }
+    
+    At this point, all the joins should have been parsed, subplanMap should only have one iterator that encompasses all the operations except aggregation.
+    This iterator is at the second highest level of the tree, directly feeding tuples into the top project. 
+
+(Walk thru 7) What does computeCostAndCardOfSubplan do when the joinSet contains only a single join, the joinToRemove?
+
+	It will just estimate the cost of joining the two base relations in the joinToRemove.
+	
+(Walk thru 9) Suppose we are considering a join between a table A and the result of a join between B and C.  Assume table A is the outer relation in the join.  What is the cost estimate?  Your expression should be in terms of the sizes (# pages, # tuples) of the base relations A, B, C.
+
+(Walk thru 10) In lab 3, you write Join and Filter operators.  Both of these support the DbIterator interface.  When/where are these iterators called?
+	
+	When executing a query, the execute() method keeps calling next() method on the physcial plan iterator; the next() method then invokes next() method of its children which are joins and filters to get the next tuple of the query result.

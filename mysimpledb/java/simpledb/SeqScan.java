@@ -1,0 +1,126 @@
+package simpledb;
+
+import java.util.*;
+
+import simpledb.TupleDesc.TDItem;
+
+/**
+ * SeqScan is an implementation of a sequential scan access method that reads
+ * each tuple of a table in no particular order (e.g., as they are laid out on
+ * disk).
+ */
+public class SeqScan implements DbIterator {
+
+    private static final long serialVersionUID = 1L;
+    
+    private TransactionId tid;
+    private int tableid;
+    private String ta;
+    private DbFileIterator dbi;
+
+    /**
+     * Creates a sequential scan over the specified table as a part of the
+     * specified transaction.
+     *
+     * @param tid        The transaction this scan is running as a part of.
+     * @param tableid    the table to scan.
+     * @param tableAlias the alias of this table (needed by the parser); the returned
+     *                   tupleDesc should have fields with name tableAlias.fieldName
+     *                   (note: this class is not responsible for handling a case where
+     *                   tableAlias or fieldName are null. It shouldn't crash if they
+     *                   are, but the resulting name can be null.fieldName,
+     *                   tableAlias.null, or null.null).
+     */
+    public SeqScan(TransactionId tid, int tableid, String tableAlias) {
+        this.tid = tid;
+        this.tableid = tableid;
+        this.ta = tableAlias;
+    }
+
+    /**
+     * @return return the table name of the table the operator scans. This should
+     * be the actual name of the table in the catalog of the database
+     */
+    public String getTableName() {
+        return Database.getCatalog().getTableName(tableid);
+    }
+
+    /**
+     * @return Return the alias of the table this operator scans.
+     */
+    public String getAlias() {
+        return ta;
+    }
+
+    public SeqScan(TransactionId tid, int tableid) {
+        this(tid, tableid, Database.getCatalog().getTableName(tableid));
+    }
+
+    public void open() throws DbException, TransactionAbortedException {
+        dbi = Database.getCatalog().getDatabaseFile(tableid).iterator(tid);
+        dbi.open();
+    }
+
+    /**
+     * Returns the TupleDesc with field names from the underlying HeapFile,
+     * prefixed with the tableAlias string from the constructor. This prefix
+     * becomes useful when joining tables containing a field(s) with the same
+     * name.
+     *
+     * @return the TupleDesc with field names from the underlying HeapFile,
+     * prefixed with the tableAlias string from the constructor.
+     */
+    public TupleDesc getTupleDesc() {
+        TupleDesc td = Database.getCatalog().getTupleDesc(tableid);
+        Iterator<TDItem> tdi = td.iterator();
+        
+        Type[] newTypeAr = new Type[td.numFields()];
+        String[] newNameAr = new String[td.numFields()];
+        
+        int i = 0;
+        while (tdi.hasNext()){
+        	TDItem item = tdi.next();
+        	newTypeAr[i] = item.fieldType;
+        	
+        	String prefix;
+        	
+        	if (ta == null)
+        		prefix = "null";
+        	else
+        		prefix = ta;
+        	
+        	if (item.fieldName == null)
+        		newNameAr[i] = prefix + "." + "null";
+        	else
+        		newNameAr[i] = prefix + "." + item.fieldName;
+        	
+        	i++;        		
+        }
+        
+        return new TupleDesc(newTypeAr, newNameAr);
+    }
+
+    public boolean hasNext() throws TransactionAbortedException, DbException {
+        if (dbi == null)	//not opened
+        	return false;
+        
+        return dbi.hasNext();
+    }
+
+    public Tuple next() throws NoSuchElementException,
+            TransactionAbortedException, DbException {
+        if (dbi == null)
+        	throw new NoSuchElementException("dbi not opened for next");
+        
+        return dbi.next();
+    }
+
+    public void close() {
+        dbi = null;
+    }
+
+    public void rewind() throws DbException, NoSuchElementException,
+            TransactionAbortedException {
+        dbi.rewind();
+    }
+}

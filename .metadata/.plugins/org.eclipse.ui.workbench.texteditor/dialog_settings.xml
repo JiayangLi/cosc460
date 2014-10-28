@@ -2,19 +2,20 @@
 <section name="Workbench">
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog">
 		<item value="false" key="isRegEx"/>
-		<item value="" key="selection"/>
+		<item value="JoinCardinality" key="selection"/>
 		<item value="false" key="casesensitive"/>
 		<item value="false" key="incremental"/>
 		<item value="true" key="wrap"/>
 		<item value="false" key="wholeword"/>
 		<list key="findhistory">
-			<item value="rewind"/>
-			<item value="replace"/>
-			<item value="schema"/>
-			<item value="desc"/>
-			<item value="size"/>
-			<item value="tuplesize"/>
-			<item value="TDitems"/>
+			<item value="joincardinality"/>
+			<item value="minval"/>
+			<item value="execute"/>
+			<item value="costand"/>
+			<item value="start"/>
+			<item value="process"/>
+			<item value="estimate"/>
+			<item value="estimatejoincost"/>
 		</list>
 		<list key="replacehistory">
 			<item value="td"/>
@@ -24,8 +25,8 @@
 	<section name="org.eclipse.ui.texteditor.FindReplaceDialog_dialogBounds">
 		<item value="289" key="DIALOG_WIDTH"/>
 		<item value="1|Ubuntu|11.0|0|GTK|1|" key="DIALOG_FONT_NAME"/>
-		<item value="544" key="DIALOG_HEIGHT"/>
-		<item value="863" key="DIALOG_X_ORIGIN"/>
-		<item value="157" key="DIALOG_Y_ORIGIN"/>
+		<item value="600" key="DIALOG_HEIGHT"/>
+		<item value="789" key="DIALOG_X_ORIGIN"/>
+		<item value="144" key="DIALOG_Y_ORIGIN"/>
 	</section>
 </section>
