@@ -12,12 +12,12 @@ public class IntegerAggregator implements Aggregator {
     private int gbfield;
     private Type gbfieldType;
     private int afield;
-  //  private Op operation;
+    private Op operation;
 
     private Op what;
-    //private int gbfield;
+    private int gbfield;
     private Type gbfieldtype;
-   // private int afield;
+    private int afield;
     // a map of groupVal -> AggregateFields
     private HashMap<String, AggregateFields> groups;
 
@@ -33,18 +33,18 @@ public class IntegerAggregator implements Aggregator {
      */
 
     public IntegerAggregator(int gbfield, Type gbfieldtype, int afield, Op what) {
-//<<<<<<< HEAD
-//        this.gbfield = gbfield;
-//        this.gbfieldType = gbfieldtype;
-//        this.afield = afield;
-//        this.operation = what;
-//=======
+<<<<<<< HEAD
+        this.gbfield = gbfield;
+        this.gbfieldType = gbfieldtype;
+        this.afield = afield;
+        this.operation = what;
+=======
         this.what = what;
         this.gbfield = gbfield;
         this.afield = afield;
         this.gbfieldtype = gbfieldtype;
         this.groups = new HashMap<String, AggregateFields>();
-
+>>>>>>> 215443779cfd9fd9efd8e287aa7079d6a36a225f
     }
 
     /**

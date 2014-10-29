@@ -62,7 +62,30 @@ public class TableStats {
      * histograms.
      */
     static final int NUM_HIST_BINS = 100;
-
+    
+    //helper variables for constructing table stats
+    //key - field index; value - number of distinct values in that field
+	private HashMap<Integer, Integer> numDistinctValues;	
+	
+	//key -field name; value - max value in that int field
+	private HashMap<Integer, Integer> maxValues;
+    
+    //key - field name; value - min value in that int field
+	private HashMap<Integer, Integer> minValues;
+        
+    //a hashMap for all integer fields
+    private HashMap<Integer, IntHistogram> intHistograms;	//key - field index; value - intHistogram for that field
+    
+    //a hashMap for all String fields
+    private HashMap<Integer, StringHistogram> stringHistograms;	//key - field index; value - stringHistogram for that field
+    
+    private int numPages;	//number of pages in this table
+    private int numTuples = 0; 	//number of tuples in this table
+    
+    private int ioCostPerPage;
+    
+    
+        
     /**
      * Create a new TableStats object, that keeps track of statistics on each
      * column of a table
@@ -79,7 +102,180 @@ public class TableStats {
         // You should try to do this reasonably efficiently, but you don't
         // necessarily have to (for example) do everything
         // in a single scan of the table.
-        // some code goes here
+    	
+        this.ioCostPerPage = ioCostPerPage;
+        this.numDistinctValues = new HashMap<Integer, Integer>();
+        this.maxValues = new HashMap<Integer, Integer>();
+        this.minValues = new HashMap<Integer, Integer>();
+        
+        establishHelperVariables(tableid);
+    	
+        this.intHistograms = new HashMap<Integer, IntHistogram>();
+        this.stringHistograms = new HashMap<Integer, StringHistogram>();
+        
+        createHistograms(tableid);
+    }
+    
+    private void establishHelperVariables(int tableid){     
+    	//store distinct values for each int field
+        HashMap<Integer, HashSet<Integer>> distinctIntValues = new HashMap<Integer, HashSet<Integer>>();
+        //store distinct values for each string field
+        HashMap<Integer, HashSet<String>> distinctStrValues = new HashMap<Integer, HashSet<String>>();
+        
+        HeapFile hf = (HeapFile) Database.getCatalog().getDatabaseFile(tableid);
+        TupleDesc td = hf.getTupleDesc();
+        
+        this.numPages = hf.numPages();
+        
+        DbFileIterator dbi = hf.iterator(null);
+        
+        try{
+        	dbi.open();
+        	while (dbi.hasNext()){
+        		Tuple t = dbi.next();
+        		
+        		this.numTuples++;	//keep track of total number of tuples
+        		
+        		for (int i = 0; i < td.numFields(); i++){
+        			switch (td.getFieldType(i)){
+        				case INT_TYPE:
+        					//get field value
+        					int val = ((IntField) t.getField(i)).getValue();
+        					
+        					//update maxValues
+        					if (!maxValues.containsKey(i)){	//first time encountering this field
+        						maxValues.put(i, val);
+        					}
+        					else{	//already encountered this field before
+        						if (maxValues.get(i) < val){
+        							maxValues.put(i, val);	//replace the old value
+        						}
+        					}
+        					
+        					//update minValues
+        					if (!minValues.containsKey(i)){	//first time encountering this field
+        						minValues.put(i, val);
+        					}
+        					else{	//already encountered this field before
+        						if (minValues.get(i) > val){
+        							minValues.put(i, val);	//replace the old value
+        						}
+        					}
+        					
+        					//update distinctIntValues
+        					if (!distinctIntValues.containsKey(i)){	//first time encountering this field
+        						HashSet<Integer> hs = new HashSet<Integer>();
+        						hs.add(val);
+        						distinctIntValues.put(i, hs);
+        					}
+        					else{	//already encountered this field before
+        						if (!distinctIntValues.get(i).contains(val)){
+        							distinctIntValues.get(i).add(val);
+        						}
+        					}
+        					break;
+        					
+        				case STRING_TYPE:
+        					String strVal = ((StringField) t.getField(i)).getValue();
+        					
+        					//only update distinctStrValues
+        					if (!distinctStrValues.containsKey(i)){	//first time encountering this field
+        						HashSet<String> hs = new HashSet<String>();
+        						hs.add(strVal);
+        						distinctStrValues.put(i, hs);
+        					}
+        					else{	//already encountered this field before
+        						if (!distinctStrValues.get(i).contains(strVal)){
+        							distinctStrValues.get(i).add(strVal);
+        						}
+        					}
+        					break;
+        			}
+        		}
+        	} //end of dbi.hasNext() while 
+        	
+        	dbi.close();
+        	
+        	//minValues and maxValues are ready
+        	//set up NumDistinctValues
+        	for (int i = 0; i < td.numFields(); i++){
+        		if (distinctIntValues.containsKey(i)){	//field i is an int field
+        			numDistinctValues.put(i, distinctIntValues.get(i).size());
+        		}
+        		else{	//field i is a string field
+        			numDistinctValues.put(i, distinctStrValues.get(i).size());
+        		}
+        	}
+        }
+        catch(DbException e){
+        	e.printStackTrace();
+        }
+        catch(TransactionAbortedException e){
+        	e.printStackTrace();
+        }
+        catch(NoSuchElementException e){
+        	e.printStackTrace();
+        }
+    }
+    
+    private void createHistograms(int tableid){
+    	HeapFile hf = (HeapFile) Database.getCatalog().getDatabaseFile(tableid);
+    	
+    	TupleDesc td = hf.getTupleDesc();
+    	
+    	DbFileIterator dbi = hf.iterator(null);
+    	
+    	try{
+    		dbi.open();
+        	while (dbi.hasNext()){
+        		Tuple t = dbi.next();
+        		
+        		for (int i = 0; i < td.numFields(); i++){
+        			switch (td.getFieldType(i)){
+        				case INT_TYPE:
+        					//get field value
+        					int val = ((IntField) t.getField(i)).getValue();
+        					
+        					//update intHistograms
+        					if (!intHistograms.containsKey(i)){	//first time encountering this field
+        						IntHistogram ih = new IntHistogram(NUM_HIST_BINS, minValues.get(i), maxValues.get(i));
+        						ih.addValue(val);
+        						intHistograms.put(i, ih);
+        					}
+        					else{	//already encountered this field before
+        						intHistograms.get(i).addValue(val);
+        					}
+        					break;
+        				case STRING_TYPE:
+        					//get field value
+        					String strVal = ((StringField) t.getField(i)).getValue();
+        					
+        					//update intHistograms
+        					if (!stringHistograms.containsKey(i)){	//first time encountering this field
+        						StringHistogram sh = new StringHistogram(NUM_HIST_BINS);
+        						sh.addValue(strVal);
+        						stringHistograms.put(i, sh);
+        					}
+        					else{	//already encountered this field before
+        						stringHistograms.get(i).addValue(strVal);
+        					}
+        					break;
+        			}
+        		}
+        		
+        	} // end of dbi.hasNext() while
+        	dbi.close();
+    	}
+    	catch(DbException e){
+        	e.printStackTrace();
+        }
+        catch(TransactionAbortedException e){
+        	e.printStackTrace();
+        }
+        catch(NoSuchElementException e){
+        	e.printStackTrace();
+        }
+    	
     }
 
     /**
@@ -95,8 +291,7 @@ public class TableStats {
      * @return The estimated cost of scanning the table.
      */
     public double estimateScanCost() {
-        // some code goes here
-        return 0;
+        return ((double) numPages) * ioCostPerPage;
     }
 
     /**
@@ -108,8 +303,7 @@ public class TableStats {
      * selectivityFactor
      */
     public int estimateTableCardinality(double selectivityFactor) {
-        // some code goes here
-        return 0;
+        return (int) (numTuples * selectivityFactor);
     }
 
     /**
@@ -125,9 +319,10 @@ public class TableStats {
      * @return The number of distinct values of the field.
      */
     public int numDistinctValues(int field) {
-        // some code goes here
-        throw new UnsupportedOperationException("implement me");
-
+        if (!numDistinctValues.containsKey(field))
+        	throw new NoSuchElementException();
+        
+        return numDistinctValues.get(field);
     }
 
     /**
@@ -141,8 +336,18 @@ public class TableStats {
      * predicate
      */
     public double estimateSelectivity(int field, Predicate.Op op, Field constant) {
-        // some code goes here
-        return 1.0;
+        if (intHistograms.containsKey(field)){	//field is an int field
+        	IntHistogram ih = intHistograms.get(field);
+        	int val = ((IntField) constant).getValue();
+        	return ih.estimateSelectivity(op, val);
+        }
+        else if (stringHistograms.containsKey(field)){
+        	StringHistogram sh = stringHistograms.get(field);
+        	String strVal = ((StringField) constant).getValue();
+        	return sh.estimateSelectivity(op, strVal); 
+        }
+        else
+        	throw new IllegalStateException("only supports int field and string field");
     }
 
 }

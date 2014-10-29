@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="TableStatsTest" project="mysimpledb" tests="4" started="4" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.TableStatsTest" time="1.438">
+    <testcase name="estimateScanCostTest" classname="simpledb.TableStatsTest" time="1.2"/>
+    <testcase name="estimateTableCardinalityTest" classname="simpledb.TableStatsTest" time="0.071"/>
+    <testcase name="estimateSelectivityTest" classname="simpledb.TableStatsTest" time="0.098"/>
+    <testcase name="numDistinctTest" classname="simpledb.TableStatsTest" time="0.069"/>
+  </testsuite>
+</testrun>
