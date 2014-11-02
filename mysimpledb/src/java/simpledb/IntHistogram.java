@@ -50,7 +50,7 @@ public class IntHistogram {
     	int index = (v - min) / otherWidth;
     	
     	if (index >= buckets.length){
-    		return index - 1;
+    		return buckets.length - 1;
     	}
     	else{
     		return index;
@@ -67,6 +67,9 @@ public class IntHistogram {
         	throw new RuntimeException("given value not in valid range");
         
         int index = findIndex(v);
+         
+        //System.out.println("buckets size: " + buckets.length);
+        //System.out.println("index: " + index);
         
         buckets[index]++;
         

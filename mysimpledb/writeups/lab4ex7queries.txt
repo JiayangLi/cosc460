@@ -10,20 +10,46 @@ and a.fname='Ginger' and a.lname='Rogers';
 
 Query 1 optimizer's plan:
 
-<fill in here>
+ π(d.fname,d.lname),card:29729
+                            |
+                            ⨝(a.id=c.pid),card:29729
+  __________________________|___________________________
+  |                                                    |
+  σ(a.lname=Rogers),card:1                             ⨝(m.mid=c.mid),card:29729
+  |                                    ________________|_________________
+  σ(a.fname=Ginger),card:1             |                                |
+  |                                    ⨝(d.id=m.did),card:2791          |
+  |                           _________|_________                       |
+  |                           |                 |                     scan(Casts c)
+scan(Actor a)               scan(Director d)  scan(Movie_Director m)
+
 
 Query 1 plan explanation:
 
-<fill in here>
+The joins are ordered in terms of their selectivities so as to minimize the cardinalities of all join results.
 
 Query 2:
 
-<fill in here>
+select v.name                                                       
+from Movie v, Movie_Director m, Director d
+where v.id = m.mid and m.did=d.id         
+and v.year=2010 and d.fname='David';  
 
-Query 1 optimizer's plan:
+Query 2 optimizer's plan:
 
-<fill in here>
+ π(v.name),card:2791
+                      |
+                      ⨝(d.id=m.did),card:2791
+  ____________________|____________________
+  |                                       |
+  σ(d.fname=David),card:1                 ⨝(v.id=m.mid),card:2791
+  |                          _____________|______________
+  |                          |                          |
+  |                          σ(v.year=2010),card:107    |
+scan(Director d)             |                          |
+                           scan(Movie v)              scan(Movie_Director m)
 
-Query 1 plan explanation:
 
-<fill in here>
+Query 2 plan explanation:
+
+Similar as Query 1 explanation.

@@ -22,9 +22,9 @@ public class Join extends Operator {
      * @param child2 Iterator for the right(inner) relation to join
      */
     public Join(JoinPredicate p, DbIterator child1, DbIterator child2) {
-    	this.p = p;
-    	this.child1 = child1;
-    	this.child2 = child2;
+        this.p = p;
+        this.child1 = child1;
+        this.child2 = child2;
     }
 
     public JoinPredicate getJoinPredicate() {
@@ -44,7 +44,7 @@ public class Join extends Operator {
      * alias or table name.
      */
     public String getJoinField2Name() {
-    	return child2.getTupleDesc().getFieldName(p.getField2());
+        return child2.getTupleDesc().getFieldName(p.getField2());
     }
 
     /**
@@ -75,8 +75,8 @@ public class Join extends Operator {
         child2.rewind();
     }
     
-    private Tuple t1 = null;	//tuples in outer loop(child1)
-    private Tuple t2 = null;	//tuples in inner loop(child2)
+    private Tuple t1 = null;    //tuples in outer loop(child1)
+    private Tuple t2 = null;    //tuples in inner loop(child2)
     
     /**
      * A private helper method to merge two tuples by concatenating tuples
@@ -86,17 +86,17 @@ public class Join extends Operator {
      * @return the merged tuple
      */
     private Tuple joinTuples(Tuple t1, Tuple t2){
-    	TupleDesc joinedTD = getTupleDesc();
-    	Tuple joinedTuple = new Tuple(joinedTD);
-    	
-    	for (int i = 0; i < joinedTD.numFields(); i++){
-    		if (i < t1.getTupleDesc().numFields())
-    			joinedTuple.setField(i, t1.getField(i));
-    		else
-    			joinedTuple.setField(i, t2.getField(i - t1.getTupleDesc().numFields()));
-    	}
-    	
-    	return joinedTuple;
+        TupleDesc joinedTD = getTupleDesc();
+        Tuple joinedTuple = new Tuple(joinedTD);
+        
+        for (int i = 0; i < joinedTD.numFields(); i++){
+            if (i < t1.getTupleDesc().numFields())
+                joinedTuple.setField(i, t1.getField(i));
+            else
+                joinedTuple.setField(i, t2.getField(i - t1.getTupleDesc().numFields()));
+        }
+        
+        return joinedTuple;
     }
     
     /**
@@ -118,21 +118,27 @@ public class Join extends Operator {
      * @see JoinPredicate#filter
      */
     protected Tuple fetchNext() throws TransactionAbortedException, DbException {
+    	if (t1==null && !child1.hasNext()){
+    		return null;
+    	}
+    	
         if (t1 == null && child1.hasNext())
-        	t1 = child1.next();
+            t1 = child1.next();
         
         while (true){
-        	while (child2.hasNext()){
-        		t2 = child2.next();
-        		if (p.filter(t1, t2)){
-        			return joinTuples(t1, t2);
-        		}
-        	}
-        	child2.rewind();
-        	if (child1.hasNext())
-        		t1 = child1.next();
-        	else
-        		break;
+            while (child2.hasNext()){
+                t2 = child2.next();
+                                
+                if (p.filter(t1, t2)){
+                    return joinTuples(t1, t2);
+                }
+            }
+            child2.rewind();
+            if (child1.hasNext()){
+                t1 = child1.next();
+            }
+            else
+                break;
         }
         return null;
     }
@@ -145,7 +151,7 @@ public class Join extends Operator {
     @Override
     public void setChildren(DbIterator[] children) {
         if (children == null)
-        	throw new NullPointerException();
+            throw new NullPointerException();
         
         child1 = children[0];
         child2 = children[1];

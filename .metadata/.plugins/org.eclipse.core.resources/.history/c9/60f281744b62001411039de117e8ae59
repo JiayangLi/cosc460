@@ -1,0 +1,294 @@
+package simpledb;
+
+import simpledb.Predicate.Op;
+
+/** A class to represent a fixed-width histogram over a single integer-based field.
+ */
+public class IntHistogram {
+	
+	// array that represents a histogram
+	private int[] histogram;
+	private int min;
+	private int max;
+		
+	// width of each bucket in the histogram
+	private int bucketWidth;
+	
+	// total number of tuples in the histogram
+	int nTup;
+
+    /**
+     * Create a new IntHistogram.
+     * 
+     * This IntHistogram should maintain a histogram of integer values that it receives.
+     * It should split the histogram into "buckets" buckets.
+     * 
+     * The values that are being histogrammed will be provided one-at-a-time through the "addValue()" function.
+     * 
+     * Your implementation should use space and have execution time that are both
+     * constant with respect to the number of values being histogrammed.  For example, you shouldn't 
+     * simply store every value that you see in a sorted list.
+     * 
+     * @param buckets The number of buckets to split the input value into.
+     * @param min The minimum integer value that will ever be passed to this class for histogramming
+     * @param max The maximum integer value that will ever be passed to this class for histogramming
+     */
+    public IntHistogram(int buckets, int min, int max) {
+    	this.histogram = new int[buckets];
+    	this.min = min;
+    	this.max = max;
+    	this.bucketWidth = (int)Math.ceil((double)(max - min) / buckets);
+    	this.nTup = 0;
+    	initializeHistogram();
+    	
+    }
+    
+    // sets number of tuples in each bucket of histogram to 0
+    private void initializeHistogram() {
+		for(int i = 0; i < histogram.length; i++){
+			histogram[i] = 0;
+		}
+	}
+
+	/**
+     * Add a value to the set of values that you are keeping a histogram of.
+     * @param v Value to add to the histogram
+     */
+    public void addValue(int v) {
+    	// Referred to pg. 804 in textbook. Equal-Width buckets
+    	for(int i = 0; i < histogram.length; i++){
+    		int bucketMin = min + (bucketWidth*i);
+    		int bucketMax = min + (bucketWidth*(i+1));
+    		    		
+    		if(bucketMin <= v && v < bucketMax){
+    			histogram[i] = histogram[i] + 1;
+    			nTup++;
+    			return;
+    		}
+    	}
+    }
+
+    /**
+     * Estimate the selectivity of a particular predicate and operand on this table.
+     * 
+     * For example, if "op" is "GREATER_THAN" and "v" is 5, 
+     * return your estimate of the fraction of elements that are greater than 5.
+     * 
+     * @param op Operator
+     * @param v Value
+     * @return Predicted selectivity of this particular operator and value
+     */
+    public double estimateSelectivity(Predicate.Op op, int v) {
+    	
+    	if(op.equals(Op.EQUALS)){
+    		return getEqualsSelectivity(v);
+    	}
+    	if(op.equals(Op.GREATER_THAN)){
+    		return getGreaterThanSelectivity(v);
+    	}
+    	if(op.equals(Op.LESS_THAN)){
+    		return getLessThanSelectivity(v);
+    	}
+    	if(op.equals(Op.GREATER_THAN_OR_EQ)){
+    		return getGreaterThanEqualSelectivity(v);
+    	}
+    	if(op.equals(Op.LESS_THAN_OR_EQ)){
+    		return getLessThanEqualSelectivity(v);
+    	}
+    	if(op.equals(Op.NOT_EQUALS)){
+    		return 1 - getEqualsSelectivity(v);
+    	}
+    	return 0;
+    	
+    	
+    }
+    
+    // private helper method that calculates selectivity for LESS THAN OR EQUAL operator
+    private double getLessThanEqualSelectivity(int v) {
+    	// edge cases
+    	if(v <= min) {
+    		return 0;
+    	}
+    	if(v > max) {
+    		return 1;
+    	}
+    	
+      	boolean bucketFound = false;
+      	double selectivity = 0;
+    	    	
+    	for(int i = 0; i < histogram.length; i++){
+    		int bucketMin = min + (bucketWidth*i);
+    		int bucketMax = min + (bucketWidth*(i+1));
+    		    		
+    		if(bucketMin <= v && v < bucketMax){
+    			// bucket found
+    			bucketFound = true;
+    			selectivity += (double)histogram[i] / nTup;
+    			
+    		}
+    		if(!bucketFound){
+    			// get the values for the buckets after the found bucket
+    			selectivity += (double)histogram[i] / nTup;
+    		}
+    		
+    	}
+    	return selectivity;
+	}
+
+	// private helper method that calculates selectivity for GREATER THAN OR EQUAL operator
+    private double getGreaterThanEqualSelectivity(int v) {
+    	// edge cases
+    	if(v < min) {
+    		return 1;
+    	}
+    	if(v >= max) {
+    		return 0;
+    	}
+    	
+      	boolean bucketFound = false;
+      	double selectivity = 0;
+      	   	
+    	
+    	for(int i = 0; i < histogram.length; i++){
+    		int bucketMin = min + (bucketWidth*i);
+    		int bucketMax = min + (bucketWidth*(i+1));
+    		    		
+    		if(bucketMin <= v && v < bucketMax){
+    			// bucket found
+    			bucketFound = true;
+    			//selectivity=(double)histogram[i] / nTup;
+    		}
+    		if(bucketFound){
+    			// get the values for the buckets after the found bucket
+    			selectivity += (double)histogram[i] / nTup;
+    		}
+    		
+    	}
+    	return selectivity;
+	}
+
+	// private helper method that calculates selectivity for LESS THAN operator
+    private double getLessThanSelectivity(int v) {
+    	// edge cases
+    	if(v <= min) {
+    		return 0;
+    	}
+    	if(v > max) {
+    		return 1;
+    	}
+    	
+      	boolean bucketFound = false;
+      	double foundBucketSelectivity = 0;
+      	double remainingBucketSelectivity = 0;
+    	    	
+    	for(int i = 0; i < histogram.length; i++){
+    		int bucketMin = min + (bucketWidth*i);
+    		int bucketMax = min + (bucketWidth*(i+1));
+    		    		
+    		if(bucketMin <= v && v < bucketMax){
+    			// bucket found
+    			bucketFound = true;
+    			double b_left = bucketMin; //right edge of bucket
+    			double b_f = (double)histogram[i] / nTup;
+    			double b_part = (v - b_left) / bucketWidth;
+    			foundBucketSelectivity = (b_f * b_part); 
+    		}
+    		if(!bucketFound){
+    			// get the values for the buckets after the found bucket
+    			remainingBucketSelectivity += (double)histogram[i] / nTup;
+    		}
+    		
+    	}
+    	return foundBucketSelectivity + remainingBucketSelectivity;
+	}
+
+	// private helper method that calculates selectivity for GREATER THAN operator
+    private double getGreaterThanSelectivity(int v) {
+    	
+    	// edge cases
+    	if(v < min) {
+    		return 1;
+    	}
+    	if(v >= max) {
+    		return 0;
+    	}
+    	
+      	boolean bucketFound = false;
+      	double foundBucketSelectivity = 0;
+      	double remainingBucketSelectivity = 0;
+    	
+    	
+    	for(int i = 0; i < histogram.length; i++){
+    		int bucketMin = min + (bucketWidth*i);
+    		int bucketMax = min + (bucketWidth*(i+1));
+    		    		
+    		if(bucketMin <= v && v < bucketMax){
+    			// bucket found
+    			bucketFound = true;
+    			double b_right = bucketMax; //right edge of bucket
+    			double b_f = (double)histogram[i] / nTup;
+    			double b_part = (b_right - v) / bucketWidth;
+    			
+    			// subtract b_f here because it will be added in the next ff statement
+    			foundBucketSelectivity = (b_f * b_part) - b_f; 
+    		}
+    		if(bucketFound){
+    			// get the values for the buckets after the found bucket
+    			remainingBucketSelectivity += (double)histogram[i] / nTup;
+    		}
+    		
+    	}
+    	return foundBucketSelectivity + remainingBucketSelectivity;
+	}
+
+	// private helper method that calculates selectivity for EQUALS operator
+    private double getEqualsSelectivity(int v) {
+    	double selectivity = 0;
+    	for(int i = 0; i < histogram.length; i++){
+    		int bucketMin = min + (bucketWidth*i);
+    		int bucketMax = min + (bucketWidth*(i+1));
+    		    		
+    		if(bucketMin <= v && v < bucketMax){
+    			// selectivity = (h / w) / ntups
+    			// since (h/w) represents the expected number of tuples in the bin with value const. 
+    			selectivity = (double)(histogram[i]/bucketWidth) / nTup;
+    			return selectivity;
+    		}
+    	}
+    	return selectivity;
+	}
+
+	/**
+     * @return
+     *     the average selectivity of this histogram.
+     *     
+     *     This is not an indispensable method to implement the basic
+     *     join optimization. It may be needed if you want to
+     *     implement a more efficient optimization
+     * */
+    public double avgSelectivity()
+    {
+    	//TODO
+        // some code goes here
+        return 1.0;
+    }
+    
+    /**
+     * @return A string describing this histogram, for debugging purposes
+     */
+    public String toString() {
+    	String histContents = "[";
+    	int j = 0;
+    	for(int i = 0; i < histogram.length-1; i++){
+    		histContents += histogram[i] + ", ";
+    		j = i;
+    	}
+    	histContents += histogram[j]+"]";
+    	String result = "Min: " + min + "\n" +
+    				    "Max: " + max + "\n" +
+    				    "BucketWidth: " + bucketWidth + "\n" +
+    				    "Number Of Tuples: " + nTup + "\n" +
+    				    "Histogram contents: " + histContents;
+    	return result;
+    }
+}

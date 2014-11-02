@@ -71,7 +71,7 @@ public class Catalog {
         
         Table value;
         
-        if (pkeyField == null || pkeyField.equals("")){
+        if (pkeyField == null){
         	value = new Table(file, name);
         }
         else{

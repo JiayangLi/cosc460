@@ -390,7 +390,8 @@ public class LogicalPlan {
                 t2name = equivMap.get(lj.t2Alias);
             else
                 t2name = lj.t2Alias;
-
+            
+            System.out.println("t1name: " + t1name);
             plan1 = subplanMap.get(t1name);
 
             if (isSubqueryJoin) {
@@ -407,7 +408,11 @@ public class LogicalPlan {
                 throw new ParsingException("Unknown table in WHERE clause " + lj.t2Alias);
 
             DbIterator j;
+            System.out.println("plan1 schema: " + plan1.getTupleDesc());
+            System.out.println("plan2 schema: " + plan2.getTupleDesc());
             j = jo.instantiateJoin(lj, plan1, plan2);
+            
+            System.out.println("j schema:" + j.getTupleDesc());
             subplanMap.put(t1name, j);
 
             if (!isSubqueryJoin) {
