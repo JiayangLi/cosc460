@@ -1,18 +1,37 @@
-Your name(s): 
+Your name(s): Jiayang(JY) Li
 
 1. Explain how you modified SynchronizedThreads in exercise 1.
+	
+	only run incrementer in a synchronized statement on the shared counter so that the current running
+	incrementer thread owns the lock on counter and other threads cannot increment the counter.
 
 2. Briefly describe (1-2 sentences) an alternate implementation for exercise 1.
+
+	Another way to is to make Counter.increment() method synchronized by just adding a "synchronized" keyword.
 
 3. Exercise 2: Explain the deadlock that happens in Deadlock in terms of locks and threads waiting on locks. The two threads in this case are alphonse and gaston. 
 
 a) What objects are being locked? 
+	
+	Friend objects, alphonse and gaston
 
 b) Who has what locks? 
 
+	the first thread(alphonse.bow(gaston)) has the lock on alphonse
+	the second thread(gaston.bow(alphonse)) has the lock on gaston
+
 c) How does deadlock occur?
+
+	Before the bowBack methods are called, thread 1 has the lock on alphonse and thread 2 has the lock on gaston.
+	When thread 1 tries to call bower.bowBack (bower=gaston), it blocks and waits to acquire the lock on gaston, which is currently owned by thread 2.
+	At the same time, when thread 2 tries to call bowBack on alphonse, it blocks and waits for the lock on alphonse which thread 1 now has.
+	Both threads then block and wait for each other to release the locks, resulting in a dead lock.
 
 4. Return to exercise 1, can deadlock occur here?  Explain why or why not.
 
+	No, because there is only one lock (i.e. the lock on the shared counter) that all threads attempt to acquire.
+	
 5. Explain why acquireLock uses a synchronized statement inside the body of the method. In other words, why not just make the acquireLock method synchronized, just like releaseLock? Will this work? Why or why not?
 	
+	If acquireLock was made synchronized, then it would be impossible to release the lock. More specifically, after the first thread called acquireLock and set inUse to be true, the next thread that called acquireLock 
+	would be stuck in the waiting loop because acquireLock, being a synchronized method, prevents the previous thread from calling releaseLock.

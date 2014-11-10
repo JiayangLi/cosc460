@@ -35,6 +35,8 @@ public class BufferPool {
     private HashMap<PageId, Page> cache;	//use a HashMap as cache
     private HashMap<PageId, Long> times;	//use a HashMap to keep track of access times	
     private int numPages;	//cache's size
+    
+    private LockManager lm;
 
     /**
      * Creates a BufferPool that caches up to numPages pages.
@@ -45,6 +47,8 @@ public class BufferPool {
     	cache = new HashMap<PageId, Page>();
     	times = new HashMap<PageId, Long>();
     	this.numPages = numPages;
+    	
+    	lm = new LockManager();
     }
 
     public static int getPageSize() {
@@ -84,6 +88,9 @@ public class BufferPool {
      */
     public Page getPage(TransactionId tid, PageId pid, Permissions perm)
             throws TransactionAbortedException, DbException {
+    	
+    	lm.acquireLock(pid, tid);
+    	
     	// if the requested page is already cached
     	if (cache.containsKey(pid)){
     		updateTime(pid);
@@ -114,8 +121,7 @@ public class BufferPool {
      * @param pid the ID of the page to unlock
      */
     public void releasePage(TransactionId tid, PageId pid) {
-        // some code goes here
-        // not necessary for lab1|lab2|lab3|lab4                                                         // cosc460
+        lm.releaseLock(pid, tid);
     }
 
     /**
@@ -132,9 +138,7 @@ public class BufferPool {
      * Return true if the specified transaction has a lock on the specified page
      */
     public boolean holdsLock(TransactionId tid, PageId p) {
-        // some code goes here
-        // not necessary for lab1|lab2|lab3|lab4                                                         // cosc460
-        return false;
+        return lm.holdsLock(p, tid);
     }
 
     /**
@@ -297,6 +301,59 @@ public class BufferPool {
     	//remove from cache
     	cache.remove(LRUid);
     	times.remove(LRUid);
+    }
+    
+    /**
+     * Private class for the lock manager
+     */
+    private class LockManager{
+    	private HashMap<PageId, TransactionId> xlocks;
+    	
+    	public LockManager(){
+    		xlocks = new HashMap<PageId, TransactionId>();
+    	}
+    	
+    	/**
+    	 * A transaction specified by its tid tries to acquire a lock (exclusive for milestone 1) on
+    	 * a page specified by its pid.
+    	 * @param pid	
+    	 * @param tid
+    	 */
+    	public void acquireLock(PageId pid, TransactionId tid){
+    		boolean waiting = true;
+    		while (waiting){
+    			synchronized(this){
+    				if (!xlocks.containsKey(pid)){	// the page doesn't have an exclusive lock
+    					waiting = false;
+    					xlocks.put(pid, tid);
+    				}
+    			}
+    			if (waiting){
+    				try{
+    					Thread.sleep(1);
+    				} catch (InterruptedException e) {}
+    			}
+    		}
+    	}
+    	
+    	/**
+    	 * A transaction specified by its tid tries to unlock a page specified by its pid.
+    	 * @param pid
+    	 * @param tid
+    	 */
+    	public synchronized void releaseLock(PageId pid, TransactionId tid){
+    		xlocks.remove(pid);
+    	}
+    	
+    	/**
+    	 * Return true if the specified transaction has a lock on the specified page
+    	 * @param pid
+    	 * @param tid
+    	 * @return	
+    	 */
+    	public synchronized boolean holdsLock(PageId pid, TransactionId tid){
+    		return xlocks.containsKey(pid);
+    	}
     }
 
 }
