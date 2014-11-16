@@ -1,0 +1,41 @@
+package concurrency_tutorial;
+
+import java.util.*;
+
+class Test{
+	static class Pair implements Comparable<Pair>{
+		String s;
+		int n;
+
+		public Pair(String s, int n){
+			this.s = s;
+			this.n = n;
+		}
+
+		public int compareTo(Pair p){
+			return this.n - p.n;
+		}
+
+		public String toString(){
+			return s + " " + n;
+		}
+	}
+
+	public static void main(String[] args){
+		Pair p2 = new Pair("cde", 3);
+		Pair p1 = new Pair("abc", 2);
+		
+		Pair p3 = new Pair("fgh", 4);
+
+
+		PriorityQueue<Pair> pq = new PriorityQueue<Pair>();
+
+		pq.offer(p1);
+		pq.offer(p2);
+		pq.offer(p3);
+
+		System.out.println(pq.size());
+		while (pq.size() > 0)
+			System.out.println(pq.poll());
+	}
+}

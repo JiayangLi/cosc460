@@ -1723,3 +1723,106 @@ Java Model Exception: Java Model Status [Unknown javadoc format for Override {ke
 	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:166)
 !SUBENTRY 1 org.eclipse.jdt.core 4 1009 2014-11-10 01:24:50.275
 !MESSAGE Unknown javadoc format for Override {key=Ljava/lang/Override;} [in Override.class [in java.lang [in /home/jiayang/Downloads/jre1.7.0_71/lib/rt.jar]]]
+!SESSION 2014-11-12 13:35:46.422 -----------------------------------------------
+eclipse.buildId=4.4.0.I20140606-1215
+java.version=1.8.0_25
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.jdt.ui 4 10001 2014-11-12 19:06:09.824
+!MESSAGE Internal Error
+!STACK 1
+Java Model Exception: Java Model Status [Unknown javadoc format for Serializable {key=Ljava/io/Serializable;} [in Serializable.class [in java.io [in /home/jiayang/Downloads/jre1.7.0_71/lib/rt.jar]]]]
+	at org.eclipse.jdt.internal.core.JavadocContents.getTypeDoc(JavadocContents.java:81)
+	at org.eclipse.jdt.internal.core.BinaryType.getAttachedJavadoc(BinaryType.java:999)
+	at org.eclipse.jdt.internal.ui.text.javadoc.JavadocContentAccess2.getHTMLContent(JavadocContentAccess2.java:500)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo(JavadocHover.java:689)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.internalGetHoverInfo(JavadocHover.java:607)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo2(JavadocHover.java:599)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:129)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:85)
+	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:166)
+!SUBENTRY 1 org.eclipse.jdt.core 4 1009 2014-11-12 19:06:09.837
+!MESSAGE Unknown javadoc format for Serializable {key=Ljava/io/Serializable;} [in Serializable.class [in java.io [in /home/jiayang/Downloads/jre1.7.0_71/lib/rt.jar]]]
+!SESSION 2014-11-15 14:06:55.655 -----------------------------------------------
+eclipse.buildId=4.4.0.I20140606-1215
+java.version=1.8.0_25
+java.vendor=Oracle Corporation
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os linux -ws gtk -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.jdt.ui 4 10001 2014-11-15 14:19:56.005
+!MESSAGE Internal Error
+!STACK 1
+Java Model Exception: Java Model Status [Unknown javadoc format for HashSet {key=Ljava/util/HashSet<Lsimpledb/TransactionId;>;} [in HashSet.class [in java.util [in /home/jiayang/Downloads/jre1.7.0_71/lib/rt.jar]]]]
+	at org.eclipse.jdt.internal.core.JavadocContents.getTypeDoc(JavadocContents.java:81)
+	at org.eclipse.jdt.internal.core.BinaryType.getAttachedJavadoc(BinaryType.java:999)
+	at org.eclipse.jdt.internal.ui.text.javadoc.JavadocContentAccess2.getHTMLContent(JavadocContentAccess2.java:500)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo(JavadocHover.java:689)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.internalGetHoverInfo(JavadocHover.java:607)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo2(JavadocHover.java:599)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:129)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:85)
+	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:166)
+!SUBENTRY 1 org.eclipse.jdt.core 4 1009 2014-11-15 14:19:56.017
+!MESSAGE Unknown javadoc format for HashSet {key=Ljava/util/HashSet<Lsimpledb/TransactionId;>;} [in HashSet.class [in java.util [in /home/jiayang/Downloads/jre1.7.0_71/lib/rt.jar]]]
+
+!ENTRY org.eclipse.jdt.ui 4 10001 2014-11-15 15:19:09.282
+!MESSAGE Internal Error
+!STACK 1
+Java Model Exception: Java Model Status [Unknown javadoc format for InterruptedException {key=Ljava/lang/InterruptedException;} [in InterruptedException.class [in java.lang [in /home/jiayang/Downloads/jre1.7.0_71/lib/rt.jar]]]]
+	at org.eclipse.jdt.internal.core.JavadocContents.getTypeDoc(JavadocContents.java:81)
+	at org.eclipse.jdt.internal.core.BinaryType.getAttachedJavadoc(BinaryType.java:999)
+	at org.eclipse.jdt.internal.ui.text.javadoc.JavadocContentAccess2.getHTMLContent(JavadocContentAccess2.java:500)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo(JavadocHover.java:689)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.internalGetHoverInfo(JavadocHover.java:607)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo2(JavadocHover.java:599)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:129)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:85)
+	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:166)
+!SUBENTRY 1 org.eclipse.jdt.core 4 1009 2014-11-15 15:19:09.283
+!MESSAGE Unknown javadoc format for InterruptedException {key=Ljava/lang/InterruptedException;} [in InterruptedException.class [in java.lang [in /home/jiayang/Downloads/jre1.7.0_71/lib/rt.jar]]]
+
+!ENTRY org.eclipse.jface 2 0 2014-11-15 16:40:24.609
+!MESSAGE Keybinding conflicts occurred.  They may interfere with normal accelerator operation.
+!SUBENTRY 1 org.eclipse.jface 2 0 2014-11-15 16:40:24.609
+!MESSAGE A conflict occurred for CTRL+D:
+Binding(CTRL+D,
+	ParameterizedCommand(Command(org.eclipse.debug.ui.commands.eof,EOF,
+		Send end of file,
+		Category(org.eclipse.debug.ui.category.run,Run/Debug,Run/Debug command category,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@5b2ed865,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.debug.ui.console,,,system)
+Binding(CTRL+D,
+	ParameterizedCommand(Command(org.eclipse.ui.edit.text.delete.line,Delete Line,
+		Delete a line of text,
+		Category(org.eclipse.ui.category.textEditor,Text Editing,Text Editing Commands,true),
+		org.eclipse.ui.internal.WorkbenchHandlerServiceHandler@1ff1b918,
+		,,true),null),
+	org.eclipse.ui.defaultAcceleratorConfiguration,
+	org.eclipse.ui.textEditorScope,,,system)
+
+!ENTRY org.eclipse.jdt.ui 4 10001 2014-11-15 22:13:09.909
+!MESSAGE Internal Error
+!STACK 1
+Java Model Exception: Java Model Status [Unknown javadoc format for PriorityQueue [in PriorityQueue.class [in java.util [in /home/jiayang/Downloads/jre1.7.0_71/lib/rt.jar]]]]
+	at org.eclipse.jdt.internal.core.JavadocContents.getTypeDoc(JavadocContents.java:81)
+	at org.eclipse.jdt.internal.core.BinaryType.getAttachedJavadoc(BinaryType.java:999)
+	at org.eclipse.jdt.internal.ui.text.javadoc.JavadocContentAccess2.getHTMLContent(JavadocContentAccess2.java:500)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo(JavadocHover.java:689)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.internalGetHoverInfo(JavadocHover.java:607)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavadocHover.getHoverInfo2(JavadocHover.java:599)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:163)
+	at org.eclipse.jdt.internal.ui.text.java.hover.BestMatchHover.getHoverInfo2(BestMatchHover.java:129)
+	at org.eclipse.jdt.internal.ui.text.java.hover.JavaEditorTextHoverProxy.getHoverInfo2(JavaEditorTextHoverProxy.java:85)
+	at org.eclipse.jface.text.TextViewerHoverManager$4.run(TextViewerHoverManager.java:166)
+!SUBENTRY 1 org.eclipse.jdt.core 4 1009 2014-11-15 22:13:09.909
+!MESSAGE Unknown javadoc format for PriorityQueue [in PriorityQueue.class [in java.util [in /home/jiayang/Downloads/jre1.7.0_71/lib/rt.jar]]]

@@ -2,9 +2,9 @@ package simpledb;
 
 import java.io.*;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.NoSuchElementException;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.ArrayList;
+import java.util.PriorityQueue;
 
 /**
  * BufferPool manages the reading and writing of pages into memory from
@@ -89,7 +89,7 @@ public class BufferPool {
     public Page getPage(TransactionId tid, PageId pid, Permissions perm)
             throws TransactionAbortedException, DbException {
     	
-    	lm.acquireLock(pid, tid);
+    	lm.acquireLock(pid, tid, perm);
     	
     	// if the requested page is already cached
     	if (cache.containsKey(pid)){
@@ -274,33 +274,63 @@ public class BufferPool {
         // some code goes here
         // not necessary for lab1|lab2|lab3|lab4                                                         // cosc460
     }
+    
+    /**
+     * a private inner class to represent a pid and the time it got accessed
+     * for evictPage() method
+     */
+    private static class TimedPage implements Comparable<TimedPage>{
+    	
+    	public PageId pid;
+    	public long time;
+    	
+    	TimedPage(PageId pid, long time){
+    		this.pid = pid;
+    		this.time = time;
+    	}
+    	
+    	public int compareTo(TimedPage other){
+    		return (int) (this.time - other.time);
+    	}
+    	
+    	public String toString(){
+    		return pid.toString() + " " + time;
+    	}
+    }
 
     /**
      * Discards a page from the buffer pool.
      * Flushes the page to disk to ensure dirty pages are updated on disk.
      */
-    private synchronized void evictPage() throws DbException {
-        //Find the least recently used page
-    	long LRUtime = Long.MAX_VALUE;
-    	PageId LRUid = null;
-    	
+    private synchronized void evictPage() throws DbException {	
+    	PriorityQueue<TimedPage> pq = new PriorityQueue<TimedPage>();
     	for (PageId pid: times.keySet()){
-    		if (times.get(pid) < LRUtime){
-    			LRUid = pid;
+    		TimedPage tp = new TimedPage(pid, times.get(pid));
+    		pq.offer(tp);
+    	}
+    	
+    	while (pq.size() > 0){
+    		System.out.println(pq.poll());
+    	}
+    	    	
+    	while (pq.size() > 0){
+    		TimedPage p = pq.poll();
+    		if (cache.get(p.pid).isDirty() != null){
+    			//flush the page
+    	    	try{
+    	    		flushPage(p.pid);
+    	    	}
+    	    	catch (IOException e){
+    	    		e.printStackTrace();
+    	    	}
+    	    	 	
+    	    	//remove from cache
+    	    	cache.remove(p.pid);
+    	    	times.remove(p.pid);
     		}
     	}
     	
-    	//flush the page
-    	try{
-    		flushPage(LRUid);
-    	}
-    	catch (IOException e){
-    		e.printStackTrace();
-    	}
-    	 	
-    	//remove from cache
-    	cache.remove(LRUid);
-    	times.remove(LRUid);
+    	throw new DbException("all pages in the bufferpool are dirty!");
     }
     
     /**
@@ -308,24 +338,61 @@ public class BufferPool {
      */
     private class LockManager{
     	private HashMap<PageId, TransactionId> xlocks;
+    	private HashMap<PageId, HashSet<TransactionId>> slocks;
     	
     	public LockManager(){
     		xlocks = new HashMap<PageId, TransactionId>();
+    		slocks = new HashMap<PageId, HashSet<TransactionId>>();
     	}
     	
     	/**
-    	 * A transaction specified by its tid tries to acquire a lock (exclusive for milestone 1) on
+    	 * A transaction specified by its tid tries to acquire a lock on
     	 * a page specified by its pid.
     	 * @param pid	
     	 * @param tid
     	 */
-    	public void acquireLock(PageId pid, TransactionId tid){
+    	public void acquireLock(PageId pid, TransactionId tid, Permissions perm){
     		boolean waiting = true;
     		while (waiting){
-    			synchronized(this){
-    				if (!xlocks.containsKey(pid)){	// the page doesn't have an exclusive lock
-    					waiting = false;
-    					xlocks.put(pid, tid);
+    			//if acquire exclusive lock
+    			if (perm.equals(Permissions.READ_WRITE)){
+	    			synchronized(this){
+	    				//if the requested page doesn't have an exclusive lock yet,
+	    				//grant exclusive lock to the tid only when 1) there is no shared lock on the requested page
+	    				// 2) the tid already has a shared lock and it is the only shared lock (lock upgrade)
+	    				
+	    				if (!xlocks.containsKey(pid)){	//no exclusive lock
+	    					HashSet<TransactionId> shared = slocks.get(pid);
+	    					if (shared == null){	//no shared lock	
+	    						waiting = false;
+		    					xlocks.put(pid, tid);
+	    					}
+	    					else if (shared.size() == 1 && shared.contains(tid)){	//lock upgrade
+	    						waiting = false;
+	    						xlocks.put(pid, tid);
+	    						shared.remove(tid);
+	    					}
+	    				}
+	    				else if (xlocks.containsKey(pid) && xlocks.get(pid).equals(tid)){	//already has an exclusive lock
+	    					waiting = false;
+	    				}
+	    			}
+    			} else {	//if acquire shared lock
+    				synchronized(this){
+    					//grant shared lock to the tid only when 1) the requested page doesn't have an exclusive lock
+    					// 2) the tid already has the exclusive lock on the page
+    					
+    					if (!xlocks.containsKey(pid) || xlocks.get(pid).equals(tid)){
+    						waiting = false;
+    						
+    						if (!slocks.containsKey(pid)){
+    							HashSet<TransactionId> newShared = new HashSet<TransactionId>();
+    							newShared.add(tid);
+    							slocks.put(pid, newShared);
+    						} else {
+    							slocks.get(pid).add(tid);
+    						}
+    					}
     				}
     			}
     			if (waiting){
@@ -342,7 +409,20 @@ public class BufferPool {
     	 * @param tid
     	 */
     	public synchronized void releaseLock(PageId pid, TransactionId tid){
-    		xlocks.remove(pid);
+    		//release exclusive lock
+    		if (xlocks.containsKey(pid) && xlocks.get(pid).equals(tid)){
+    			xlocks.remove(pid);
+    		}
+    		
+    		//release shared lock
+    		HashSet<TransactionId> shared = slocks.get(pid);
+    		
+    		if (shared != null){
+    			shared.remove(tid);
+    			if (shared.size() == 0){
+    				slocks.remove(pid);
+    			}
+    		}
     	}
     	
     	/**
@@ -352,7 +432,18 @@ public class BufferPool {
     	 * @return	
     	 */
     	public synchronized boolean holdsLock(PageId pid, TransactionId tid){
-    		return xlocks.containsKey(pid);
+    		//check exclusive locks
+    		if (xlocks.containsKey(pid) && xlocks.get(pid).equals(tid)){
+    			return true;
+    		}
+    		
+    		//check shared locks
+    		HashSet<TransactionId> shared = slocks.get(pid);
+    		if (shared != null && shared.contains(tid)){
+    			return true;
+    		} else {
+    			return false;
+    		}
     	}
     }
 

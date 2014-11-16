@@ -21,12 +21,12 @@ public class InsertTest extends SimpleDbTestBase {
         HeapFile destination = SystemTestUtil.createRandomHeapFile(
                 columns, destinationRows, null, destinationTuples);
         assert destinationTuples.size() == destinationRows;
-
+        
         // Insert source into destination
         TransactionId tid = new TransactionId();
         SeqScan ss = new SeqScan(tid, source.getId(), "");
         Insert insOp = new Insert(tid, ss, destination.getId());
-
+        
 //        Query q = new Query(insOp, tid);
         insOp.open();
         boolean hasResult = false;

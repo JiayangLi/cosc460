@@ -6,4 +6,7 @@
 <fullyQualifiedTypeName name="java.io.IOException"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="simpledb.Predicate.Op"/>
+<fullyQualifiedTypeName name="java.util.HashSet"/>
+<fullyQualifiedTypeName name="concurrency_tutorial.Test.Pair"/>
+<fullyQualifiedTypeName name="java.util.PriorityQueue"/>
 </qualifiedTypeNameHistroy>
