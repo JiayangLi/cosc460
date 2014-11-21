@@ -9,4 +9,6 @@
 <fullyQualifiedTypeName name="java.util.HashSet"/>
 <fullyQualifiedTypeName name="concurrency_tutorial.Test.Pair"/>
 <fullyQualifiedTypeName name="java.util.PriorityQueue"/>
+<fullyQualifiedTypeName name="java.util.Map"/>
+<fullyQualifiedTypeName name="java.util.Set"/>
 </qualifiedTypeNameHistroy>

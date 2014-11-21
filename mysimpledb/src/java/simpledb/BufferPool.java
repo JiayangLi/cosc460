@@ -87,9 +87,13 @@ public class BufferPool {
      * @param perm the requested permissions on the page
      */
     public Page getPage(TransactionId tid, PageId pid, Permissions perm)
-            throws TransactionAbortedException, DbException {
+            throws TransactionAbortedException, DbException{
     	
-    	lm.acquireLock(pid, tid, perm);
+    	try {
+			lm.acquireLock(pid, tid, perm);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     	
     	// if the requested page is already cached
     	if (cache.containsKey(pid)){
@@ -130,8 +134,7 @@ public class BufferPool {
      * @param tid the ID of the transaction requesting the unlock
      */
     public void transactionComplete(TransactionId tid) throws IOException {
-        // some code goes here
-        // not necessary for lab1|lab2|lab3|lab4                                                         // cosc460
+        transactionComplete(tid, true);
     }
 
     /**
@@ -140,7 +143,7 @@ public class BufferPool {
     public boolean holdsLock(TransactionId tid, PageId p) {
         return lm.holdsLock(p, tid);
     }
-
+    
     /**
      * Commit or abort a given transaction; release all locks associated to
      * the transaction.
@@ -150,8 +153,24 @@ public class BufferPool {
      */
     public void transactionComplete(TransactionId tid, boolean commit)
             throws IOException {
-        // some code goes here
-        // not necessary for lab1|lab2|lab3|lab4                                                         // cosc460
+    	HashSet<PageId> completed = new HashSet<PageId>();
+    	
+    	for (PageId pid: cache.keySet()){
+    		Page p = cache.get(pid);
+    		if (p.isDirty() != null && p.isDirty().equals(tid)){
+    			completed.add(pid);
+    		}
+    	}
+    	
+    	for (PageId pid: completed){
+    		if (commit){
+    			flushPage(pid);
+    		} else {
+    			discardPage(pid);
+    		}
+    	}
+    	
+    	lm.releaseAllLocks(tid);
     }
 
     /**
@@ -238,8 +257,8 @@ public class BufferPool {
      * cache.
      */
     public synchronized void discardPage(PageId pid) {
-        // some code goes here
-        // only necessary for lab6                                                                            // cosc460
+    	cache.remove(pid);
+    	times.remove(pid);
     }
 
     /**
@@ -271,8 +290,8 @@ public class BufferPool {
      * Write all pages of the specified transaction to disk.
      */
     public synchronized void flushPages(TransactionId tid) throws IOException {
-        // some code goes here
-        // not necessary for lab1|lab2|lab3|lab4                                                         // cosc460
+    	// some code goes here
+    	// not necessary for lab1|lab2|lab3|lab4 
     }
     
     /**
@@ -308,14 +327,10 @@ public class BufferPool {
     		TimedPage tp = new TimedPage(pid, times.get(pid));
     		pq.offer(tp);
     	}
-    	
-    	while (pq.size() > 0){
-    		System.out.println(pq.poll());
-    	}
     	    	
     	while (pq.size() > 0){
     		TimedPage p = pq.poll();
-    		if (cache.get(p.pid).isDirty() != null){
+    		if (cache.get(p.pid).isDirty() == null){	//clean page
     			//flush the page
     	    	try{
     	    		flushPage(p.pid);
@@ -327,6 +342,7 @@ public class BufferPool {
     	    	//remove from cache
     	    	cache.remove(p.pid);
     	    	times.remove(p.pid);
+    	    	return;
     		}
     	}
     	
@@ -351,19 +367,30 @@ public class BufferPool {
     	 * @param pid	
     	 * @param tid
     	 */
-    	public void acquireLock(PageId pid, TransactionId tid, Permissions perm){
+    	public synchronized void acquireLock(PageId pid, TransactionId tid, Permissions perm) throws TransactionAbortedException, IOException{
     		boolean waiting = true;
+    		
+    		//check for deadlock
+    		long initial = System.currentTimeMillis();
+    		
     		while (waiting){
+    			long current = System.currentTimeMillis();
+    			//System.out.println("time different: " + (current - initial));
+    			if (current - initial > 400){
+    				transactionComplete(tid, false);
+    				throw new TransactionAbortedException();
+    			}
     			//if acquire exclusive lock
     			if (perm.equals(Permissions.READ_WRITE)){
-	    			synchronized(this){
+	    			//synchronized(this){
 	    				//if the requested page doesn't have an exclusive lock yet,
 	    				//grant exclusive lock to the tid only when 1) there is no shared lock on the requested page
 	    				// 2) the tid already has a shared lock and it is the only shared lock (lock upgrade)
-	    				
+	    
 	    				if (!xlocks.containsKey(pid)){	//no exclusive lock
+	    					
 	    					HashSet<TransactionId> shared = slocks.get(pid);
-	    					if (shared == null){	//no shared lock	
+	    					if (shared == null || shared.size() == 0){	//no shared lock	
 	    						waiting = false;
 		    					xlocks.put(pid, tid);
 	    					}
@@ -376,15 +403,14 @@ public class BufferPool {
 	    				else if (xlocks.containsKey(pid) && xlocks.get(pid).equals(tid)){	//already has an exclusive lock
 	    					waiting = false;
 	    				}
-	    			}
+	    			//}
     			} else {	//if acquire shared lock
-    				synchronized(this){
+    				//synchronized(this){
     					//grant shared lock to the tid only when 1) the requested page doesn't have an exclusive lock
     					// 2) the tid already has the exclusive lock on the page
     					
     					if (!xlocks.containsKey(pid) || xlocks.get(pid).equals(tid)){
     						waiting = false;
-    						
     						if (!slocks.containsKey(pid)){
     							HashSet<TransactionId> newShared = new HashSet<TransactionId>();
     							newShared.add(tid);
@@ -393,7 +419,7 @@ public class BufferPool {
     							slocks.get(pid).add(tid);
     						}
     					}
-    				}
+    				//}
     			}
     			if (waiting){
     				try{
@@ -444,6 +470,41 @@ public class BufferPool {
     		} else {
     			return false;
     		}
+    	}
+    	
+    	/**
+    	 * release all locks associated with the transaction specified by the given tid
+    	 * @param tid
+    	 */
+    	public synchronized void releaseAllLocks(TransactionId tid){
+    		//release exclusive lock
+    		HashSet<PageId> toRelease = new HashSet<PageId>();
+    		
+    		for (PageId pid: xlocks.keySet()){
+    			if (xlocks.get(pid).equals(tid)){
+    				toRelease.add(pid);
+    			}
+    		}
+    		
+    		for (PageId pid: toRelease){
+    			releaseLock(pid, tid);
+    		}
+    		
+    		toRelease.clear();
+    		
+    		//release shared lock(s)
+    		for (PageId pid: slocks.keySet()){
+    			HashSet<TransactionId> tids = slocks.get(pid);
+    			if (tids.contains(tid)){
+    				toRelease.add(pid);
+    			}
+    		}
+    		
+    		for (PageId pid: toRelease){
+    			releaseLock(pid, tid);
+    		}
+    		
+    		
     	}
     }
 

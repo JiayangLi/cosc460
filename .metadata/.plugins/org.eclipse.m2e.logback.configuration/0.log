@@ -84,3 +84,21 @@ java.lang.IllegalStateException: Invalid type name: TTuple
 2014-09-28 11:13:32,590 [main] WARN  o.e.r.c.r.p.ProcessableProposalFactory - Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.javadoc.JavadocInlineTagCompletionProposal' ('{@inheritDoc}'). Returning original proposal instead.
 2014-09-28 11:13:32,590 [main] WARN  o.e.r.c.r.p.ProcessableProposalFactory - Unknown JDT proposal type 'class org.eclipse.jdt.internal.ui.text.java.LazyJavaCompletionProposal' ('@throws'). Returning original proposal instead.
 2014-10-29 15:18:29,282 [main] WARN  o.e.r.i.c.rcp.TypeBindingAnalyzer - Can't handle %s as parent of completion location.
+2014-11-19 22:00:41,816 [Recommenders-Timeout-Manager] ERROR o.e.r.i.rcp.JavaElementSelections - Failed to resolve selection in '=mysimpledb/src\/java<simpledb{BufferPool.java' at offset 16664
+org.eclipse.jdt.core.JavaModelException: Index out of bounds
+	at org.eclipse.jdt.internal.core.Openable.codeSelect(Openable.java:158) ~[org.eclipse.jdt.core_3.10.0.v20140604-1726.jar:na]
+	at org.eclipse.jdt.internal.core.CompilationUnit.codeSelect(CompilationUnit.java:377) ~[org.eclipse.jdt.core_3.10.0.v20140604-1726.jar:na]
+	at org.eclipse.jdt.internal.core.CompilationUnit.codeSelect(CompilationUnit.java:371) ~[org.eclipse.jdt.core_3.10.0.v20140604-1726.jar:na]
+	at org.eclipse.recommenders.internal.rcp.JavaElementSelections.resolveJavaElementFromTypeRootInEditor(JavaElementSelections.java:146) [org.eclipse.recommenders.rcp_2.1.0.v20140610-1852.jar:na]
+	at org.eclipse.recommenders.internal.rcp.JavaElementSelections.resolveJavaElementFromEditor(JavaElementSelections.java:128) [org.eclipse.recommenders.rcp_2.1.0.v20140610-1852.jar:na]
+	at org.eclipse.recommenders.internal.rcp.JavaElementSelections.resolveJavaElementFromEditor(JavaElementSelections.java:111) [org.eclipse.recommenders.rcp_2.1.0.v20140610-1852.jar:na]
+	at org.eclipse.recommenders.internal.rcp.JavaElementSelectionService.handleSelectionInEditor(JavaElementSelectionService.java:108) [org.eclipse.recommenders.rcp_2.1.0.v20140610-1852.jar:na]
+	at org.eclipse.recommenders.internal.rcp.JavaElementSelectionService.access$1(JavaElementSelectionService.java:105) [org.eclipse.recommenders.rcp_2.1.0.v20140610-1852.jar:na]
+	at org.eclipse.recommenders.internal.rcp.JavaElementSelectionService$1.run(JavaElementSelectionService.java:82) [org.eclipse.recommenders.rcp_2.1.0.v20140610-1852.jar:na]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:511) [na:1.8.0_25]
+	at java.util.concurrent.FutureTask.run(FutureTask.java:266) [na:1.8.0_25]
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180) [na:1.8.0_25]
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293) [na:1.8.0_25]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142) [na:1.8.0_25]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617) [na:1.8.0_25]
+	at java.lang.Thread.run(Thread.java:745) [na:1.8.0_25]

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="LockingTest2" project="mysimpledb" tests="9" started="9" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.LockingTest2" time="1.453">
+    <testcase name="acquireReadLocksOnSamePage" classname="simpledb.LockingTest2" time="0.353"/>
+    <testcase name="acquireReadWriteLocksOnSamePage" classname="simpledb.LockingTest2" time="0.126"/>
+    <testcase name="acquireWriteReadLocksOnSamePage" classname="simpledb.LockingTest2" time="0.136"/>
+    <testcase name="acquireReadWriteLocksOnTwoPages" classname="simpledb.LockingTest2" time="0.109"/>
+    <testcase name="acquireWriteLocksOnTwoPages" classname="simpledb.LockingTest2" time="0.107"/>
+    <testcase name="acquireReadLocksOnTwoPages" classname="simpledb.LockingTest2" time="0.105"/>
+    <testcase name="lockUpgrade" classname="simpledb.LockingTest2" time="0.204"/>
+    <testcase name="acquireWriteAndReadLocks" classname="simpledb.LockingTest2" time="0.105"/>
+    <testcase name="acquireThenRelease" classname="simpledb.LockingTest2" time="0.207"/>
+  </testsuite>
+</testrun>
