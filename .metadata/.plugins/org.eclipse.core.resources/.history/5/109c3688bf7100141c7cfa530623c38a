@@ -38,15 +38,8 @@ b) What specific information do you store and how do you store it?
 
 c) Briefly describe what happens when a new transaction requests a page.  I.e., walk thru how the lock manager decides whether or not to grant the request.  Your description should reference the data structures that describe in part (b).
 
-	If a transaction requests an exclusive lock, the lock manager only grants the request when no other transaction has the exclusive lock on this page and there is no shared lock on this page or the requesting transaction itself holds
-	the only shared lock on this page (lock upgrade). If the lock manager grants the request, it puts a pid-tid pair in exclusive lock hashmap.
-	
-	If a transaction requests a shared lock, the lock manager only grants the request when there is no exclusive lock on this page or the requesting transaction itself holds the exclusive lock on this page.
-	If the lock manager grants the request, it first checks if this pid is already in the hashmap. If it is, add the requesting tid into the hashset associated with the pid; otherwise, create a new hashset with this tid and put this pid and
-	the newly created hashset into the hashmap.
+	If a transaction requests an exclusive lock 
 
 d) Briefly explain how you manage locks when inserting a tuple into a HeapFile.  In particular, how do you acquire/release locks when looking for a page to insert.
 
-	When inserting a tuple into a HeapFile, HeapFile.insertTuple() is first called, which looks for a page with empty slot. If it finds a page with an available slot, it gets the page through BufferPool.getPage() with read/write permission.
-	BufferPool.getPage() grants the exclusive lock if no other transaction has it, otherwise it blocks and waits. Once the exclusive lock is acquired, HeapPage.insertTuple() is invoked to actually insert the tuple. The lock will be released
-	when this particular transaction either commits or aborts.
+	(Replace this text with your answer)

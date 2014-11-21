@@ -397,7 +397,7 @@ public class BufferPool {
 	    					else if (shared.size() == 1 && shared.contains(tid)){	//lock upgrade
 	    						waiting = false;
 	    						xlocks.put(pid, tid);
-	    						shared.remove(tid);
+	    						//shared.remove(tid);
 	    					}
 	    				}
 	    				else if (xlocks.containsKey(pid) && xlocks.get(pid).equals(tid)){	//already has an exclusive lock
@@ -409,7 +409,7 @@ public class BufferPool {
     					//grant shared lock to the tid only when 1) the requested page doesn't have an exclusive lock
     					// 2) the tid already has the exclusive lock on the page
     					
-    					if (!xlocks.containsKey(pid)){
+    					if (!xlocks.containsKey(pid) || xlocks.get(pid).equals(tid)){
     						waiting = false;
     						if (!slocks.containsKey(pid)){
     							HashSet<TransactionId> newShared = new HashSet<TransactionId>();
@@ -418,9 +418,6 @@ public class BufferPool {
     						} else {
     							slocks.get(pid).add(tid);
     						}
-    					}
-    					else if (xlocks.get(pid).equals(tid)){
-    						waiting = false;
     					}
     				//}
     			}

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="LockingTest" project="mysimpledb" tests="3" started="3" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.LockingTest" time="0.472">
+    <testcase name="acquireWriteLocksOnSamePage" classname="simpledb.LockingTest" time="0.146"/>
+    <testcase name="acquireWriteLocksOnTwoPages" classname="simpledb.LockingTest" time="0.114"/>
+    <testcase name="acquireThenRelease" classname="simpledb.LockingTest" time="0.212"/>
+  </testsuite>
+</testrun>

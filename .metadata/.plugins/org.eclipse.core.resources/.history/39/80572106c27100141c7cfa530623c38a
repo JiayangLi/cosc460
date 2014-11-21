@@ -47,6 +47,4 @@ c) Briefly describe what happens when a new transaction requests a page.  I.e., 
 
 d) Briefly explain how you manage locks when inserting a tuple into a HeapFile.  In particular, how do you acquire/release locks when looking for a page to insert.
 
-	When inserting a tuple into a HeapFile, HeapFile.insertTuple() is first called, which looks for a page with empty slot. If it finds a page with an available slot, it gets the page through BufferPool.getPage() with read/write permission.
-	BufferPool.getPage() grants the exclusive lock if no other transaction has it, otherwise it blocks and waits. Once the exclusive lock is acquired, HeapPage.insertTuple() is invoked to actually insert the tuple. The lock will be released
-	when this particular transaction either commits or aborts.
+	(Replace this text with your answer)
