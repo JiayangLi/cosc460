@@ -153,23 +153,19 @@ public class BufferPool {
      */
     public void transactionComplete(TransactionId tid, boolean commit)
             throws IOException {
-    	HashSet<PageId> completed = new HashSet<PageId>();
+    	//HashSet<PageId> completed = new HashSet<PageId>();
     	
     	for (PageId pid: cache.keySet()){
     		Page p = cache.get(pid);
     		if (p.isDirty() != null && p.isDirty().equals(tid)){
-    			completed.add(pid);
+    			if (commit){
+    				p.setBeforeImage();
+        			flushPage(pid);
+        		} else {
+        			discardPage(pid);
+        		}
     		}
     	}
-    	
-    	for (PageId pid: completed){
-    		if (commit){
-    			flushPage(pid);
-    		} else {
-    			discardPage(pid);
-    		}
-    	}
-    	
     	lm.releaseAllLocks(tid);
     }
 
@@ -274,6 +270,12 @@ public class BufferPool {
         
         Page pageToFlush = cache.get(pid);
         
+        TransactionId dirtier = pageToFlush.isDirty();
+        if (dirtier != null){
+          Database.getLogFile().logWrite(dirtier, pageToFlush.getBeforeImage(), pageToFlush);
+          Database.getLogFile().force();
+        }
+        
         //check if dirty
         if (pageToFlush.isDirty() != null){
             DbFile table = Database.getCatalog().getDatabaseFile(pid.getTableId());
@@ -367,7 +369,7 @@ public class BufferPool {
     	 * @param pid	
     	 * @param tid
     	 */
-    	public synchronized void acquireLock(PageId pid, TransactionId tid, Permissions perm) throws TransactionAbortedException, IOException{
+    	public synchronized void acquireLock(PageId pid, TransactionId tid, Permissions perm) throws IOException, TransactionAbortedException{
     		boolean waiting = true;
     		
     		//check for deadlock
@@ -376,7 +378,7 @@ public class BufferPool {
     		while (waiting){
     			long current = System.currentTimeMillis();
     			//System.out.println("time different: " + (current - initial));
-    			if (current - initial > 400){
+    			if (current - initial > 1000){
     				transactionComplete(tid, false);
     				throw new TransactionAbortedException();
     			}
@@ -408,7 +410,7 @@ public class BufferPool {
     				//synchronized(this){
     					//grant shared lock to the tid only when 1) the requested page doesn't have an exclusive lock
     					// 2) the tid already has the exclusive lock on the page
-    					
+    				
     					if (!xlocks.containsKey(pid)){
     						waiting = false;
     						if (!slocks.containsKey(pid)){
@@ -506,8 +508,6 @@ public class BufferPool {
     		for (PageId pid: toRelease){
     			releaseLock(pid, tid);
     		}
-    		
-    		
     	}
     }
 
