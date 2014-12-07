@@ -94,8 +94,35 @@ class LogFileRecovery {
      */
     public void rollback(TransactionId tidToRollback) throws IOException {
         readOnlyLog.seek(readOnlyLog.length()); // undoing so move to end of logfile
-
-        // some code goes here
+        
+        synchronized (Database.getBufferPool()) {
+        	synchronized (this){
+        		long current = readOnlyLog.getFilePointer();
+        		while (current >LogFile.LONG_SIZE) {
+	        		readOnlyLog.seek(current - LogFile.LONG_SIZE);
+	        		long recordOffset = readOnlyLog.readLong();
+	        		if (recordOffset < 0)
+	        			System.out.println(recordOffset);
+	        		readOnlyLog.seek(recordOffset);
+	        		
+	        		int type = readOnlyLog.readInt();
+	                long tid = readOnlyLog.readLong();
+	                
+	                if (type == LogType.UPDATE_RECORD && tid == tidToRollback.getId()) {
+	                	Page beforeImg = LogFile.readPageData(readOnlyLog);
+	                    Page afterImg = LogFile.readPageData(readOnlyLog);		               
+	                    PageId pid = beforeImg.getId();
+	                    Database.getBufferPool().discardPage(pid);
+	                    Database.getCatalog().getDatabaseFile(pid.getTableId()).writePage(beforeImg);
+	                } else if (type == LogType.COMMIT_RECORD && tid == tidToRollback.getId()){
+	                	throw new IOException("Cannot abort a committed transaction!");
+	                }
+	                current = recordOffset;
+        		}
+        		readOnlyLog.seek(readOnlyLog.length()); // undoing so move to end of logfile
+        	}
+        }
+        
     }
 
     /**

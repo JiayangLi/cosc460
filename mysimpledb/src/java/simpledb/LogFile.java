@@ -140,17 +140,17 @@ public class LogFile {
     private void checkActive(TransactionId tid, boolean shouldBeActive) throws IOException {
         // should check for active but many test cases do not explicitly start and stop
         // transactions and so checking for active can cause tests to fail
-        /*
-        if (shouldBeActive) {
-            if (!activeTids.contains(tid.getId())) {
-                throw new IOException("This tid should be active but is not!");
-            }
-        } else {
-            if (activeTids.contains(tid.getId())) {
-                throw new IOException("This tid should NOT be active but it is!");
-            }
-        }
-        */
+        
+//        if (shouldBeActive) {
+//            if (!activeTids.contains(tid.getId())) {
+//                throw new IOException("This tid should be active but is not!");
+//            }
+//        } else {
+//            if (activeTids.contains(tid.getId())) {
+//                throw new IOException("This tid should NOT be active but it is!");
+//            }
+//        }
+        
     }
 
     /**

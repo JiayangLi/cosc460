@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="JoinTest (1)" project="mysimpledb" tests="3" started="3" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.systemtest.JoinTest" time="0.035">
+    <testcase name="testSingleMatch" classname="simpledb.systemtest.JoinTest" time="0.025"/>
+    <testcase name="testNoMatch" classname="simpledb.systemtest.JoinTest" time="0.005"/>
+    <testcase name="testMultipleMatch" classname="simpledb.systemtest.JoinTest" time="0.005"/>
+  </testsuite>
+</testrun>
