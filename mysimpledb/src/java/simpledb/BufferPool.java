@@ -4,8 +4,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
 import java.util.PriorityQueue;
+import java.util.Queue;
 
 /**
  * BufferPool manages the reading and writing of pages into memory from
@@ -94,11 +96,9 @@ public class BufferPool {
     public Page getPage(TransactionId tid, PageId pid, Permissions perm)
             throws TransactionAbortedException, DbException{
     	
-    	try {
-			lm.acquireLock(pid, tid, perm);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+    	
+		lm.acquireLock(pid, tid, perm);
+		
     	
     	// if the requested page is already cached
     	if (cache.containsKey(pid)){
@@ -363,83 +363,312 @@ public class BufferPool {
     /**
      * Private class for the lock manager
      */
-    class LockManager{
+//    class LockManager{
+//    	private HashMap<PageId, TransactionId> xlocks;
+//    	private HashMap<PageId, HashSet<TransactionId>> slocks;
+//    	
+//    	public LockManager(){
+//    		xlocks = new HashMap<PageId, TransactionId>();
+//    		slocks = new HashMap<PageId, HashSet<TransactionId>>();
+//    	}
+//    	
+//    	/**
+//    	 * A transaction specified by its tid tries to acquire a lock on
+//    	 * a page specified by its pid.
+//    	 * @param pid	
+//    	 * @param tid
+//    	 */
+//    	public synchronized void acquireLock(PageId pid, TransactionId tid, Permissions perm) throws IOException, TransactionAbortedException{
+//    		boolean waiting = true;
+//    		
+//    		//check for deadlock
+//    		long initial = System.currentTimeMillis();
+//    		
+//    		while (waiting){
+//    			long current = System.currentTimeMillis();
+//    			//System.out.println("time different: " + (current - initial));
+//    			if (current - initial > 2000){
+//    				//transactionComplete(tid, false);
+//    				throw new TransactionAbortedException();
+//    			}
+//    			//if acquire exclusive lock
+//    			if (perm.equals(Permissions.READ_WRITE)){
+//	    			//synchronized(this){
+//	    				//if the requested page doesn't have an exclusive lock yet,
+//	    				//grant exclusive lock to the tid only when 1) there is no shared lock on the requested page
+//	    				// 2) the tid already has a shared lock and it is the only shared lock (lock upgrade)
+//	    
+//	    				if (!xlocks.containsKey(pid)){	//no exclusive lock
+//	    					
+//	    					HashSet<TransactionId> shared = slocks.get(pid);
+//	    					if (shared == null || shared.size() == 0){	//no shared lock	
+//	    						waiting = false;
+//		    					xlocks.put(pid, tid);
+//	    					}
+//	    					else if (shared.size() == 1 && shared.contains(tid)){	//lock upgrade
+//	    						waiting = false;
+//	    						xlocks.put(pid, tid);
+//	    						shared.remove(tid);
+//	    					}
+//	    				}
+//	    				else if (xlocks.containsKey(pid) && xlocks.get(pid).equals(tid)){	//already has an exclusive lock
+//	    					waiting = false;
+//	    				}
+//	    			//}
+//    			} else {	//if acquire shared lock
+//    				//synchronized(this){
+//    					//grant shared lock to the tid only when 1) the requested page doesn't have an exclusive lock
+//    					// 2) the tid already has the exclusive lock on the page
+//    				
+//    					if (!xlocks.containsKey(pid)){
+//    						waiting = false;
+//    						if (!slocks.containsKey(pid)){
+//    							HashSet<TransactionId> newShared = new HashSet<TransactionId>();
+//    							newShared.add(tid);
+//    							slocks.put(pid, newShared);
+//    						} else {
+//    							slocks.get(pid).add(tid);
+//    						}
+//    					}
+//    					else if (xlocks.get(pid).equals(tid)){
+//    						waiting = false;
+//    					}
+//    				//}
+//    			}
+//    			if (waiting){
+//    				try{
+//    					Thread.sleep(1);
+//    				} catch (InterruptedException e) {}
+//    			}
+//    		}
+//    	}
+//    	
+//    	/**
+//    	 * A transaction specified by its tid tries to unlock a page specified by its pid.
+//    	 * @param pid
+//    	 * @param tid
+//    	 */
+//    	public synchronized void releaseLock(PageId pid, TransactionId tid){
+//    		//release exclusive lock
+//    		if (xlocks.containsKey(pid) && xlocks.get(pid).equals(tid)){
+//    			xlocks.remove(pid);
+//    		}
+//    		
+//    		//release shared lock
+//    		HashSet<TransactionId> shared = slocks.get(pid);
+//    		
+//    		if (shared != null){
+//    			shared.remove(tid);
+//    			if (shared.size() == 0){
+//    				slocks.remove(pid);
+//    			}
+//    		}
+//    	}
+//    	
+//    	/**
+//    	 * Return true if the specified transaction has a lock on the specified page
+//    	 * @param pid
+//    	 * @param tid
+//    	 * @return	
+//    	 */
+//    	public synchronized boolean holdsLock(PageId pid, TransactionId tid){
+//    		//check exclusive locks
+//    		if (xlocks.containsKey(pid) && xlocks.get(pid).equals(tid)){
+//    			return true;
+//    		}
+//    		
+//    		//check shared locks
+//    		HashSet<TransactionId> shared = slocks.get(pid);
+//    		if (shared != null && shared.contains(tid)){
+//    			return true;
+//    		} else {
+//    			return false;
+//    		}
+//    	}
+//    	
+//    	/**
+//    	 * release all locks associated with the transaction specified by the given tid
+//    	 * @param tid
+//    	 */
+//    	public synchronized void releaseAllLocks(TransactionId tid){
+//    		//release exclusive lock
+//    		HashSet<PageId> toRelease = new HashSet<PageId>();
+//    		
+//    		for (PageId pid: xlocks.keySet()){
+//    			if (xlocks.get(pid).equals(tid)){
+//    				toRelease.add(pid);
+//    			}
+//    		}
+//    		
+//    		for (PageId pid: toRelease){
+//    			releaseLock(pid, tid);
+//    		}
+//    		
+//    		toRelease.clear();
+//    		
+//    		//release shared lock(s)
+//    		for (PageId pid: slocks.keySet()){
+//    			HashSet<TransactionId> tids = slocks.get(pid);
+//    			if (tids.contains(tid)){
+//    				toRelease.add(pid);
+//    			}
+//    		}
+//    		
+//    		for (PageId pid: toRelease){
+//    			releaseLock(pid, tid);
+//    		}
+//    	}
+//    }
+    
+    static class LockManager{
+    	
+    	//inner class that represents a lock request
+    	static class LockRequest {       	
+        	Permissions type;
+        	TransactionId requester;
+        	
+        	public LockRequest(TransactionId tid, Permissions perm){
+        		this.type = perm;
+        		this.requester = tid;
+        	}
+        	
+        	public boolean equals(Object other){
+        		if (other instanceof LockRequest){
+        			LockRequest o = (LockRequest) other;
+        			return (o.type.equals(this.type) && o.requester.equals(this.requester));
+        		} else {
+        			return false;
+        		}
+        	}
+    	}
+    	
     	private HashMap<PageId, TransactionId> xlocks;
     	private HashMap<PageId, HashSet<TransactionId>> slocks;
+    	private HashMap<PageId, Queue<LockRequest>> requests;
     	
     	public LockManager(){
-    		xlocks = new HashMap<PageId, TransactionId>();
-    		slocks = new HashMap<PageId, HashSet<TransactionId>>();
+    		this.xlocks = new HashMap<PageId, TransactionId>();
+    		this.slocks = new HashMap<PageId, HashSet<TransactionId>>();
+    		this.requests = new HashMap<PageId, Queue<LockRequest>>();
+    	}
+    	
+    
+    	private synchronized boolean tryAcquireLock(PageId pid, TransactionId tid, Permissions perm){
+    		//if the requested page doesn't have an exclusive lock yet,
+    		//grant exclusive lock to the tid only when 1) there is no shared lock on the requested page
+    		// 2) the tid already has a shared lock and it is the only shared lock (lock upgrade)
+    		if (perm.equals(Permissions.READ_WRITE)){
+    			if (!xlocks.containsKey(pid)){ //no xlock on this page
+    				HashSet<TransactionId> shared = slocks.get(pid);
+    				if (shared == null || shared.size() == 0){ //no shared lock, grant right away
+    					xlocks.put(pid, tid);
+    					return true;
+    				} else if (shared.size() == 1 && shared.contains(tid)){ //lock upgrade, grant right away
+    					xlocks.put(pid, tid);
+    					slocks.remove(pid);
+    					return true;
+    				}
+    			}
+    			return false;
+    		} else if (perm.equals(Permissions.READ_ONLY)){
+    			//grant shared lock to the tid only when 1) the requested page doesn't have an exclusive lock
+    			// 2) the tid already has the exclusive lock on the page
+    			if (!xlocks.containsKey(pid)){
+    				if (!slocks.containsKey(pid)){ //no xlock and no slock on this page
+    					HashSet<TransactionId> newShared = new HashSet<TransactionId>();
+    					newShared.add(tid);
+    					slocks.put(pid, newShared);
+    				} else {
+    					slocks.get(pid).add(tid);
+    				}
+    				return true;
+    			}
+    			else if (xlocks.get(pid).equals(tid)){ //already has xlock
+    				return true;
+    			}
+    			return false;   			
+    		}
+    		
+    		throw new RuntimeException("invalid permission type!");
+    	}
+    	
+    	public void acquireLock(PageId pid, TransactionId tid, Permissions perm) throws TransactionAbortedException {    		
+    		boolean success = tryAcquireLock(pid, tid, perm);
+
+    		if (success){ //successfully acquired lock
+    			return;
+    		} else { //failed to acquire lock, need to wait
+    			synchronized (this.requests){
+    				LockRequest req = new LockRequest(tid, perm);
+    				if (requests.containsKey(pid)){ //queue it behind previous requests
+    					requests.get(pid).offer(req);
+    				} else { //first request for the page
+    					Queue<LockRequest> waiting = new LinkedList<LockRequest>();
+    					waiting.offer(req);
+    					requests.put(pid, waiting);
+    				}
+    			}
+    		}
+    		
+    		long initialTime = System.currentTimeMillis();
+    		//start waiting
+    		while (true){
+    			long currentTime = System.currentTimeMillis();
+    			//detect deadlock
+    			if (currentTime - initialTime > 2000){
+    				synchronized (this.requests){
+    					//System.out.println("before: " + requests);
+    					LockRequest toRemove = new LockRequest(tid, perm);
+    					//requests.get(pid).remove(toRemove);
+    					System.out.println("after: " + requests);
+    				}
+    				throw new TransactionAbortedException();
+    			}
+    			    			
+    			synchronized (this.requests){
+    				LockRequest currentRequest = new LockRequest(tid, perm);
+    				if (!requests.get(pid).contains(currentRequest)){ //has acquired lock
+    					return;
+    				}
+    				
+    				LockRequest head = requests.get(pid).peek();
+    				TransactionId headTid = head.requester;
+    				Permissions headPerm = head.type;
+    				if (tryAcquireLock(pid, headTid, headPerm)){
+    					if (headTid.equals(tid)){ // successfully acquired lock
+    						requests.get(pid).poll();
+    						return;
+    					} else {
+    						requests.get(pid).poll();
+    					}
+    				}
+    			}
+    			
+    			try {
+    				Thread.sleep(1);
+    			} catch (InterruptedException ignored) {};
+    		}
+    		//exit only when deadlock or acquired lock
     	}
     	
     	/**
-    	 * A transaction specified by its tid tries to acquire a lock on
-    	 * a page specified by its pid.
-    	 * @param pid	
+    	 * Return true if the specified transaction has a lock on the specified page
+    	 * @param pid
     	 * @param tid
+    	 * @return	
     	 */
-    	public synchronized void acquireLock(PageId pid, TransactionId tid, Permissions perm) throws IOException, TransactionAbortedException{
-    		boolean waiting = true;
+    	public synchronized boolean holdsLock(PageId pid, TransactionId tid){
+    		//check exclusive locks
+    		if (xlocks.containsKey(pid) && xlocks.get(pid).equals(tid)){
+    			return true;
+    		}
     		
-    		//check for deadlock
-    		long initial = System.currentTimeMillis();
-    		
-    		while (waiting){
-    			long current = System.currentTimeMillis();
-    			//System.out.println("time different: " + (current - initial));
-    			if (current - initial > 1000){
-    				//transactionComplete(tid, false);
-    				throw new TransactionAbortedException();
-    			}
-    			//if acquire exclusive lock
-    			if (perm.equals(Permissions.READ_WRITE)){
-	    			//synchronized(this){
-	    				//if the requested page doesn't have an exclusive lock yet,
-	    				//grant exclusive lock to the tid only when 1) there is no shared lock on the requested page
-	    				// 2) the tid already has a shared lock and it is the only shared lock (lock upgrade)
-	    
-	    				if (!xlocks.containsKey(pid)){	//no exclusive lock
-	    					
-	    					HashSet<TransactionId> shared = slocks.get(pid);
-	    					if (shared == null || shared.size() == 0){	//no shared lock	
-	    						waiting = false;
-		    					xlocks.put(pid, tid);
-	    					}
-	    					else if (shared.size() == 1 && shared.contains(tid)){	//lock upgrade
-	    						waiting = false;
-	    						xlocks.put(pid, tid);
-	    						shared.remove(tid);
-	    					}
-	    				}
-	    				else if (xlocks.containsKey(pid) && xlocks.get(pid).equals(tid)){	//already has an exclusive lock
-	    					waiting = false;
-	    				}
-	    			//}
-    			} else {	//if acquire shared lock
-    				//synchronized(this){
-    					//grant shared lock to the tid only when 1) the requested page doesn't have an exclusive lock
-    					// 2) the tid already has the exclusive lock on the page
-    				
-    					if (!xlocks.containsKey(pid)){
-    						waiting = false;
-    						if (!slocks.containsKey(pid)){
-    							HashSet<TransactionId> newShared = new HashSet<TransactionId>();
-    							newShared.add(tid);
-    							slocks.put(pid, newShared);
-    						} else {
-    							slocks.get(pid).add(tid);
-    						}
-    					}
-    					else if (xlocks.get(pid).equals(tid)){
-    						waiting = false;
-    					}
-    				//}
-    			}
-    			if (waiting){
-    				try{
-    					Thread.sleep(1);
-    				} catch (InterruptedException e) {}
-    			}
+    		//check shared locks
+    		HashSet<TransactionId> shared = slocks.get(pid);
+    		if (shared != null && shared.contains(tid)){
+    			return true;
+    		} else {
+    			return false;
     		}
     	}
     	
@@ -462,27 +691,6 @@ public class BufferPool {
     			if (shared.size() == 0){
     				slocks.remove(pid);
     			}
-    		}
-    	}
-    	
-    	/**
-    	 * Return true if the specified transaction has a lock on the specified page
-    	 * @param pid
-    	 * @param tid
-    	 * @return	
-    	 */
-    	public synchronized boolean holdsLock(PageId pid, TransactionId tid){
-    		//check exclusive locks
-    		if (xlocks.containsKey(pid) && xlocks.get(pid).equals(tid)){
-    			return true;
-    		}
-    		
-    		//check shared locks
-    		HashSet<TransactionId> shared = slocks.get(pid);
-    		if (shared != null && shared.contains(tid)){
-    			return true;
-    		} else {
-    			return false;
     		}
     	}
     	

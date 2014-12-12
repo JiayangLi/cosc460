@@ -101,21 +101,35 @@ class LogFileRecovery {
         		while (current >LogFile.LONG_SIZE) {
 	        		readOnlyLog.seek(current - LogFile.LONG_SIZE);
 	        		long recordOffset = readOnlyLog.readLong();
-	        		if (recordOffset < 0)
-	        			System.out.println(recordOffset);
 	        		readOnlyLog.seek(recordOffset);
 	        		
 	        		int type = readOnlyLog.readInt();
 	                long tid = readOnlyLog.readLong();
 	                
-	                if (type == LogType.UPDATE_RECORD && tid == tidToRollback.getId()) {
-	                	Page beforeImg = LogFile.readPageData(readOnlyLog);
-	                    Page afterImg = LogFile.readPageData(readOnlyLog);		               
-	                    PageId pid = beforeImg.getId();
-	                    Database.getBufferPool().discardPage(pid);
-	                    Database.getCatalog().getDatabaseFile(pid.getTableId()).writePage(beforeImg);
-	                } else if (type == LogType.COMMIT_RECORD && tid == tidToRollback.getId()){
-	                	throw new IOException("Cannot abort a committed transaction!");
+	                if (tid == tidToRollback.getId()){
+	                	switch (type){
+		                	case LogType.BEGIN_RECORD:
+		                		Database.getLogFile().logAbort(tid);
+			                	return;
+		                    case LogType.COMMIT_RECORD:
+		                    	throw new IOException("Cannot abort a committed transaction!");
+		                    case LogType.ABORT_RECORD:
+		                    	throw new IOException("Cannot commit a committed transaction!");
+		                    case LogType.UPDATE_RECORD:
+		                    	Page beforeImg = LogFile.readPageData(readOnlyLog);
+			                    Page afterImg = LogFile.readPageData(readOnlyLog);		               
+			                    PageId pid = beforeImg.getId();
+			                    Database.getBufferPool().discardPage(pid);
+			                    Database.getCatalog().getDatabaseFile(pid.getTableId()).writePage(beforeImg);
+			                    Database.getLogFile().logCLR(tid, beforeImg);
+		                        break;
+		                    case LogType.CLR_RECORD:
+		                        break;
+		                    case LogType.CHECKPOINT_RECORD:
+		                    	break;
+		                    default: 
+		                    	throw new RuntimeException("Unexpected type!  Type = " + type); 
+	                	}
 	                }
 	                current = recordOffset;
         		}
@@ -134,8 +148,133 @@ class LogFileRecovery {
      * the BufferPool are locked.
      */
     public void recover() throws IOException {
-
-        // some code goes here
-
+    	synchronized (Database.getBufferPool()) {
+    		synchronized (this) {
+    			HashSet<Long> losers = new HashSet<Long>();
+    			
+    			readOnlyLog.seek(0);	//go back to beginning
+    			long lastCheckpoint = readOnlyLog.readLong();
+    			
+    			if (lastCheckpoint != -1){	//go to the last checkpoint if it exists
+    				readOnlyLog.seek(lastCheckpoint);
+    				readOnlyLog.skipBytes(LogFile.INT_SIZE + LogFile.LONG_SIZE); //skip type and tid
+    				int count = readOnlyLog.readInt();
+    				for (int i = 0; i < count; i++){
+    					losers.add(readOnlyLog.readLong());
+    				}
+    				readOnlyLog.skipBytes(LogFile.LONG_SIZE); //skip the starting offset of this checkpoint
+    			}
+    			
+    			redo(losers);
+    			undo(losers);
+    		}
+    	}
+    }
+    
+    /**
+     * Perform the redo phase.
+     * 
+     * Only call this function in recover() because it assumes that the filepointer of readOnlyLog is
+     * at appropriate position.
+     */
+    private void redo(HashSet<Long> losers) throws IOException {
+    	while (readOnlyLog.getFilePointer() < readOnlyLog.length()){
+			int type = readOnlyLog.readInt();
+            long tid = readOnlyLog.readLong();
+            switch (type){
+            	case LogType.BEGIN_RECORD:
+            		if (losers.contains(tid))
+            			throw new IOException("already begun");
+            		losers.add(tid);
+            		break;
+            	case LogType.COMMIT_RECORD:
+            		if (!losers.contains(tid))
+            			throw new IOException("can't commit, already committed or aborted");
+            		losers.remove(tid);
+            		break;
+            	case LogType.ABORT_RECORD:
+            		if (!losers.contains(tid))
+            			throw new IOException("can't abort, already committed or aborted");
+            		losers.remove(tid);
+            		break;
+            	case LogType.UPDATE_RECORD:
+            		if (!losers.contains(tid))
+            			throw new IOException("can't update, already committed or aborted");
+            		Page beforeImg = LogFile.readPageData(readOnlyLog);
+                    Page afterImg = LogFile.readPageData(readOnlyLog);  // after image
+                    PageId pid = beforeImg.getId();
+                    Database.getBufferPool().discardPage(pid);
+                    Database.getCatalog().getDatabaseFile(pid.getTableId()).writePage(afterImg);
+            		break;
+            	case LogType.CLR_RECORD:
+            		if (!losers.contains(tid))
+            			throw new IOException("can't redo CLR, already committed or aborted");
+            		afterImg = LogFile.readPageData(readOnlyLog);  // after image
+            		pid = afterImg.getId();
+            		Database.getCatalog().getDatabaseFile(pid.getTableId()).writePage(afterImg);
+            		break;
+            	case LogType.CHECKPOINT_RECORD:
+            		throw new RuntimeException("Should not encounter any checkpoint!!");
+            	default:
+            		throw new RuntimeException("Unexpected type!  Type = " + type);
+            }
+            long startOfRecord = readOnlyLog.readLong();
+		}
+    }
+    
+    /**
+     * Perform the undo phase
+     * 
+     * @param losers 
+     */
+    private void undo(HashSet<Long> losers) throws IOException {
+    	 readOnlyLog.seek(readOnlyLog.length()); // undoing so move to end of logfile
+         
+         synchronized (Database.getBufferPool()) {
+         	synchronized (this){
+         		long current = readOnlyLog.getFilePointer();
+         		while (current > LogFile.LONG_SIZE && !losers.isEmpty()) {
+ 	        		readOnlyLog.seek(current - LogFile.LONG_SIZE);
+ 	        		long recordOffset = readOnlyLog.readLong();
+ 	        		readOnlyLog.seek(recordOffset);
+ 	        		
+ 	        		int type = readOnlyLog.readInt();
+ 	                long tid = readOnlyLog.readLong();
+ 	                
+ 	                switch (type){
+ 	                
+	 	                case LogType.UPDATE_RECORD: 
+	 	                	if (losers.contains(tid)){
+		 	                	Page beforeImg = LogFile.readPageData(readOnlyLog);
+		 	                    Page afterImg = LogFile.readPageData(readOnlyLog);		               
+		 	                    PageId pid = beforeImg.getId();
+		 	                    Database.getBufferPool().discardPage(pid);
+		 	                    Database.getCatalog().getDatabaseFile(pid.getTableId()).writePage(beforeImg);
+		 	                    Database.getLogFile().logCLR(tid, beforeImg);
+	 	                	}
+	 	                    break;
+	 	                case LogType.ABORT_RECORD:
+	 	                	if (losers.contains(tid))
+	 	                		throw new IOException("not possible");
+	 	                case LogType.BEGIN_RECORD:
+	 	                	if (losers.contains(tid)){
+	 	                		Database.getLogFile().logAbort(tid);
+	 	                		losers.remove(tid);
+	 	                	}
+	 	                	break;
+	 	                case LogType.CLR_RECORD:
+	 	                	break;
+	 	                case LogType.COMMIT_RECORD:
+	 	                	if (losers.contains(tid))
+	 	                		throw new IOException("Cannot abort a committed transaction!");
+	 	               case LogType.CHECKPOINT_RECORD:
+	 	            	   	break;
+	 	                default:
+	 	                	throw new RuntimeException("Unexpected type!  Type = " + type);
+ 	                }
+ 	               current = recordOffset;
+         		}
+         	}
+         }
     }
 }
