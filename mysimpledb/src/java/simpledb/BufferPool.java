@@ -429,6 +429,7 @@ public class BufferPool {
     			}
     			return false;
     		} else if (perm.equals(Permissions.READ_ONLY)){
+    			//System.out.println("test try shared");
     			//grant shared lock to the tid only when 1) the requested page doesn't have an exclusive lock
     			// 2) the tid already has the exclusive lock on the page
     			if (!xlocks.containsKey(pid)){
@@ -440,8 +441,7 @@ public class BufferPool {
     					slocks.get(pid).add(tid);
     				}
     				return true;
-    			}
-    			else if (xlocks.get(pid).equals(tid)){ //already has xlock
+    			} else if (xlocks.get(pid).equals(tid)){ //already has xlock
     				return true;
     			}
     			return false;   			
@@ -451,9 +451,12 @@ public class BufferPool {
     	}
     	
     	public void acquireLock(PageId pid, TransactionId tid, Permissions perm) throws TransactionAbortedException {    		
+//    		if (perm.equals(Permissions.READ_ONLY))
+//				System.out.println("!!!!!!!!!!!!!!");
     		boolean success = tryAcquireLock(pid, tid, perm);
-
+    		
     		if (success){ //successfully acquired lock
+    			//System.out.println("success");
     			return;
     		} else { //failed to acquire lock, need to wait
     			synchronized (this.requests){
@@ -471,36 +474,42 @@ public class BufferPool {
     		//System.out.println("request list: " + requests);
     		
     		long initialTime = System.currentTimeMillis();
+    		long currentTime = initialTime;
     		//start waiting
     		while (true){
-    			//System.out.println("request: " + requests);
-    			//System.out.println("xlocks: " + xlocks);
-    			//System.out.println("slocks: " + slocks);
+//    			System.out.println("new round...");
+//    			System.out.println("tid: " + tid + "pid: " + pid + " perm: " + perm);
+//    			System.out.println("request: " + requests);
+//    			System.out.println("xlocks: " + xlocks);
+//    			System.out.println("slocks: " + slocks);
     			
-    			long currentTime = System.currentTimeMillis();
     			//detect deadlock
+    			
     			if (currentTime - initialTime > 1000){
     				synchronized (this.requests){
-    					//System.out.println("before: " + requests);
+    					//System.out.println("abort: " + tid);
     					LockRequest toRemove = new LockRequest(tid, perm);
     					requests.get(pid).remove(toRemove);
     					//System.out.println("after: " + requests);
     				}
     				throw new TransactionAbortedException();
     			}
+    		
     			    			
     			synchronized (this.requests){
     				LockRequest currentRequest = new LockRequest(tid, perm);
     				if (!requests.get(pid).contains(currentRequest)){ //has acquired lock
-    					//System.out.println("test return");
+    					System.out.println("test return");
     					return;
     				}
     				
     				LockRequest head = requests.get(pid).peek();
     				TransactionId headTid = head.requester;
     				Permissions headPerm = head.type;
+    				
+    				if (headTid.equals(tid))
+    					currentTime += 1;
     				if (tryAcquireLock(pid, headTid, headPerm)){
-    					System.out.println("test");
     					if (headTid.equals(tid)){ // successfully acquired lock
     						requests.get(pid).poll();
     						//System.out.println("test 2");
@@ -512,7 +521,7 @@ public class BufferPool {
     			}
     			
     			try {
-    				Thread.sleep(10);
+    				Thread.sleep(1);
     			} catch (InterruptedException ignored) {};
     		}
     		//exit only when deadlock or acquired lock
@@ -559,6 +568,10 @@ public class BufferPool {
     				slocks.remove(pid);
     			}
     		}
+    		
+//    		System.out.println("tid " + tid);
+//    		System.out.println("xlocks: " + xlocks.get(pid));
+//    		System.out.println("slocks: " + slocks.get(pid));
     	}
     	
     	/**
@@ -566,6 +579,7 @@ public class BufferPool {
     	 * @param tid
     	 */
     	public synchronized void releaseAllLocks(TransactionId tid){
+//    		System.out.println("shared before: " + slocks);
     		//release exclusive lock
     		HashSet<PageId> toRelease = new HashSet<PageId>();
     		
@@ -592,6 +606,10 @@ public class BufferPool {
     		for (PageId pid: toRelease){
     			releaseLock(pid, tid);
     		}
+    		
+//    		System.out.println("tid " + tid);
+//    		//System.out.println("xlocks " + xlocks);
+//    		System.out.println("slocks " + slocks);
     	}
     }
 }

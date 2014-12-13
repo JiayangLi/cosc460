@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="DeadlockTest" project="mysimpledb" tests="3" started="3" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.DeadlockTest" time="3.472">
+    <testcase name="testReadWriteDeadlock" classname="simpledb.DeadlockTest" time="1.176"/>
+    <testcase name="testWriteWriteDeadlock" classname="simpledb.DeadlockTest" time="1.187"/>
+    <testcase name="testUpgradeWriteDeadlock" classname="simpledb.DeadlockTest" time="1.109"/>
+  </testsuite>
+</testrun>

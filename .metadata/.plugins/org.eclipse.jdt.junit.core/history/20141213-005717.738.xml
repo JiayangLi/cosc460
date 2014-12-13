@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="simpledb" project="mysimpledb" tests="107" started="107" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.JoinOptimizerTest" time="6.224">
+    <testcase name="nonequalityOrderJoinsTest" classname="simpledb.JoinOptimizerTest" time="0.379"/>
+    <testcase name="estimateJoinCostTest" classname="simpledb.JoinOptimizerTest" time="0.099"/>
+    <testcase name="estimateJoinCardinality" classname="simpledb.JoinOptimizerTest" time="0.091"/>
+    <testcase name="orderJoinsTest" classname="simpledb.JoinOptimizerTest" time="1.168"/>
+    <testcase name="bigOrderJoinsTest" classname="simpledb.JoinOptimizerTest" time="4.487"/>
+  </testsuite>
+  <testsuite name="simpledb.IntHistogramTest" time="0.167">
+    <testcase name="orderOfGrowthTest" classname="simpledb.IntHistogramTest" time="0.163"/>
+    <testcase name="opGreaterThanTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opGreaterThanOrEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opNotEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="uniformTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="uniformTestWithRange" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="testLargeLastBin" classname="simpledb.IntHistogramTest" time="0.001"/>
+    <testcase name="extraBuckets" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="negativeRangeTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opLessThanTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opLessThanOrEqualsTest" classname="simpledb.IntHistogramTest" time="0.003"/>
+  </testsuite>
+  <testsuite name="simpledb.HeapFileReadTest" time="0.008">
+    <testcase name="getTupleDesc" classname="simpledb.HeapFileReadTest" time="0.001"/>
+    <testcase name="numPages" classname="simpledb.HeapFileReadTest" time="0.0"/>
+    <testcase name="readPage" classname="simpledb.HeapFileReadTest" time="0.001"/>
+    <testcase name="testIteratorBasic" classname="simpledb.HeapFileReadTest" time="0.001"/>
+    <testcase name="testIteratorClose" classname="simpledb.HeapFileReadTest" time="0.002"/>
+    <testcase name="getId" classname="simpledb.HeapFileReadTest" time="0.003"/>
+  </testsuite>
+  <testsuite name="simpledb.LockingTest2" time="2.225">
+    <testcase name="acquireReadLocksOnSamePage" classname="simpledb.LockingTest2" time="0.226"/>
+    <testcase name="acquireReadWriteLocksOnSamePage" classname="simpledb.LockingTest2" time="0.245"/>
+    <testcase name="acquireWriteReadLocksOnSamePage" classname="simpledb.LockingTest2" time="0.222"/>
+    <testcase name="acquireReadWriteLocksOnTwoPages" classname="simpledb.LockingTest2" time="0.225"/>
+    <testcase name="acquireWriteLocksOnTwoPages" classname="simpledb.LockingTest2" time="0.222"/>
+    <testcase name="acquireReadLocksOnTwoPages" classname="simpledb.LockingTest2" time="0.212"/>
+    <testcase name="lockUpgrade" classname="simpledb.LockingTest2" time="0.334"/>
+    <testcase name="acquireWriteAndReadLocks" classname="simpledb.LockingTest2" time="0.211"/>
+    <testcase name="acquireThenRelease" classname="simpledb.LockingTest2" time="0.328"/>
+  </testsuite>
+  <testsuite name="simpledb.AggregateTest" time="0.005">
+    <testcase name="getTupleDesc" classname="simpledb.AggregateTest" time="0.002"/>
+    <testcase name="countStringAggregate" classname="simpledb.AggregateTest" time="0.001"/>
+    <testcase name="sumStringGroupBy" classname="simpledb.AggregateTest" time="0.0"/>
+    <testcase name="sumAggregate" classname="simpledb.AggregateTest" time="0.001"/>
+    <testcase name="avgAggregate" classname="simpledb.AggregateTest" time="0.0"/>
+    <testcase name="maxAggregate" classname="simpledb.AggregateTest" time="0.0"/>
+    <testcase name="minAggregate" classname="simpledb.AggregateTest" time="0.001"/>
+    <testcase name="rewind" classname="simpledb.AggregateTest" time="0.0"/>
+  </testsuite>
+  <testsuite name="simpledb.CatalogTest" time="0.003">
+    <testcase name="getTupleDesc" classname="simpledb.CatalogTest" time="0.001"/>
+    <testcase name="getDatabaseFile" classname="simpledb.CatalogTest" time="0.0"/>
+    <testcase name="getTableId" classname="simpledb.CatalogTest" time="0.002"/>
+  </testsuite>
+  <testsuite name="simpledb.TupleDescTest" time="0.015">
+    <testcase name="nameToId" classname="simpledb.TupleDescTest" time="0.012"/>
+    <testcase name="testEquals" classname="simpledb.TupleDescTest" time="0.0"/>
+    <testcase name="testToString" classname="simpledb.TupleDescTest" time="0.0"/>
+    <testcase name="testIterator" classname="simpledb.TupleDescTest" time="0.0"/>
+    <testcase name="numFields" classname="simpledb.TupleDescTest" time="0.001"/>
+    <testcase name="getFieldName" classname="simpledb.TupleDescTest" time="0.0"/>
+    <testcase name="combine" classname="simpledb.TupleDescTest" time="0.001"/>
+    <testcase name="getType" classname="simpledb.TupleDescTest" time="0.0"/>
+    <testcase name="getSize" classname="simpledb.TupleDescTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.TableStatsTest" time="0.489">
+    <testcase name="estimateScanCostTest" classname="simpledb.TableStatsTest" time="0.382"/>
+    <testcase name="estimateTableCardinalityTest" classname="simpledb.TableStatsTest" time="0.035"/>
+    <testcase name="estimateSelectivityTest" classname="simpledb.TableStatsTest" time="0.036"/>
+    <testcase name="numDistinctTest" classname="simpledb.TableStatsTest" time="0.036"/>
+  </testsuite>
+  <testsuite name="simpledb.FilterTest" time="0.002">
+    <testcase name="getTupleDesc" classname="simpledb.FilterTest" time="0.001"/>
+    <testcase name="filterSomeLessThan" classname="simpledb.FilterTest" time="0.0"/>
+    <testcase name="filterAllLessThan" classname="simpledb.FilterTest" time="0.0"/>
+    <testcase name="filterEqual" classname="simpledb.FilterTest" time="0.0"/>
+    <testcase name="filterEqualNoTuples" classname="simpledb.FilterTest" time="0.001"/>
+    <testcase name="rewind" classname="simpledb.FilterTest" time="0.0"/>
+  </testsuite>
+  <testsuite name="simpledb.PredicateTest" time="0.001">
+    <testcase name="filter" classname="simpledb.PredicateTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.HeapPageReadTest" time="0.001">
+    <testcase name="getNumEmptySlots" classname="simpledb.HeapPageReadTest" time="0.0"/>
+    <testcase name="testIterator" classname="simpledb.HeapPageReadTest" time="0.0"/>
+    <testcase name="getId" classname="simpledb.HeapPageReadTest" time="0.001"/>
+    <testcase name="getSlot" classname="simpledb.HeapPageReadTest" time="0.0"/>
+  </testsuite>
+  <testsuite name="simpledb.JoinPredicateTest" time="0.001">
+    <testcase name="filterVaryingVals" classname="simpledb.JoinPredicateTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.RecordIdTest" time="0.001">
+    <testcase name="getPageId" classname="simpledb.RecordIdTest" time="0.0"/>
+    <testcase name="tupleno" classname="simpledb.RecordIdTest" time="0.001"/>
+    <testcase name="hCode" classname="simpledb.RecordIdTest" time="0.0"/>
+    <testcase name="equals" classname="simpledb.RecordIdTest" time="0.0"/>
+  </testsuite>
+  <testsuite name="simpledb.LockingTest" time="0.699">
+    <testcase name="acquireWriteLocksOnTwoPages" classname="simpledb.LockingTest" time="0.22"/>
+    <testcase name="acquireThenRelease" classname="simpledb.LockingTest" time="0.289"/>
+    <testcase name="acquireWriteLocksOnSamePage" classname="simpledb.LockingTest" time="0.19"/>
+  </testsuite>
+  <testsuite name="simpledb.HeapPageIdTest" time="0.001">
+    <testcase name="getTableId" classname="simpledb.HeapPageIdTest" time="0.0"/>
+    <testcase name="pageno" classname="simpledb.HeapPageIdTest" time="0.0"/>
+    <testcase name="testHashCode" classname="simpledb.HeapPageIdTest" time="0.0"/>
+    <testcase name="equals" classname="simpledb.HeapPageIdTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.HeapPageWriteTest" time="0.027">
+    <testcase name="testDirty" classname="simpledb.HeapPageWriteTest" time="0.0"/>
+    <testcase name="addTuple" classname="simpledb.HeapPageWriteTest" time="0.026"/>
+    <testcase name="deleteNonexistentTuple" classname="simpledb.HeapPageWriteTest" time="0.0"/>
+    <testcase name="deleteTuple" classname="simpledb.HeapPageWriteTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.StringAggregatorTest" time="0.001">
+    <testcase name="testIterator" classname="simpledb.StringAggregatorTest" time="0.0"/>
+    <testcase name="mergeCount" classname="simpledb.StringAggregatorTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.DeadlockTest" time="4.777">
+    <testcase name="testUpgradeWriteDeadlock" classname="simpledb.DeadlockTest" time="1.427"/>
+    <testcase name="testReadWriteDeadlock" classname="simpledb.DeadlockTest" time="1.465"/>
+    <testcase name="testWriteWriteDeadlock" classname="simpledb.DeadlockTest" time="1.885"/>
+  </testsuite>
+  <testsuite name="simpledb.JoinTest" time="0.003">
+    <testcase name="getTupleDesc" classname="simpledb.JoinTest" time="0.001"/>
+    <testcase name="eqJoin" classname="simpledb.JoinTest" time="0.0"/>
+    <testcase name="gtJoin" classname="simpledb.JoinTest" time="0.001"/>
+    <testcase name="rewind" classname="simpledb.JoinTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.InsertTest" time="0.003">
+    <testcase name="getTupleDesc" classname="simpledb.InsertTest" time="0.001"/>
+    <testcase name="getNext" classname="simpledb.InsertTest" time="0.002"/>
+  </testsuite>
+  <testsuite name="simpledb.TupleTest" time="0.001">
+    <testcase name="getTupleDesc" classname="simpledb.TupleTest" time="0.0"/>
+    <testcase name="testToString" classname="simpledb.TupleTest" time="0.0"/>
+    <testcase name="modifyFields" classname="simpledb.TupleTest" time="0.0"/>
+    <testcase name="modifyRecordId" classname="simpledb.TupleTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.HeapFileWriteTest" time="0.013">
+    <testcase name="addTuple" classname="simpledb.HeapFileWriteTest" time="0.013"/>
+  </testsuite>
+  <testsuite name="simpledb.IntegerAggregatorTest" time="0.002">
+    <testcase name="testIterator" classname="simpledb.IntegerAggregatorTest" time="0.0"/>
+    <testcase name="mergeSum" classname="simpledb.IntegerAggregatorTest" time="0.0"/>
+    <testcase name="mergeMin" classname="simpledb.IntegerAggregatorTest" time="0.001"/>
+    <testcase name="mergeMax" classname="simpledb.IntegerAggregatorTest" time="0.0"/>
+    <testcase name="mergeAvg" classname="simpledb.IntegerAggregatorTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.TransactionTest" time="0.743">
+    <testcase name="attemptTransactionTwice" classname="simpledb.TransactionTest" time="0.24"/>
+    <testcase name="commitTransaction" classname="simpledb.TransactionTest" time="0.283"/>
+    <testcase name="abortTransaction" classname="simpledb.TransactionTest" time="0.22"/>
+  </testsuite>
+</testrun>

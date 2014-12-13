@@ -93,7 +93,6 @@ class LogFileRecovery {
      * @throws java.io.IOException if tidToRollback has already committed
      */
     public void rollback(TransactionId tidToRollback) throws IOException {
-    	System.out.println("hahaha rollback " + tidToRollback);
         readOnlyLog.seek(readOnlyLog.length()); // undoing so move to end of logfile
         
 //        synchronized (Database.getBufferPool()) {

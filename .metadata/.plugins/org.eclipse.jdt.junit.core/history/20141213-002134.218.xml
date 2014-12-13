@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="Rerun simpledb.systemtest.TransactionTest.testTwoThreads" project="mysimpledb" tests="1" started="1" failures="0" errors="1" ignored="0">
+  <testcase name="testTwoThreads" classname="simpledb.systemtest.TransactionTest" time="2.211">
+    <error>java.lang.RuntimeException: Child thread threw an exception.
+	at simpledb.systemtest.TransactionTest.validateTransactions(TransactionTest.java:57)
+	at simpledb.systemtest.TransactionTest.testTwoThreads(TransactionTest.java:219)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+Caused by: java.lang.NullPointerException
+	at simpledb.BufferPool$LockManager.tryAcquireLock(BufferPool.java:443)
+	at simpledb.BufferPool$LockManager.acquireLock(BufferPool.java:458)
+	at simpledb.BufferPool.getPage(BufferPool.java:100)
+	at simpledb.HeapFile$fileIterator.open(HeapFile.java:207)
+	at simpledb.SeqScan.open(SeqScan.java:61)
+	at simpledb.Delete.open(Delete.java:38)
+	at simpledb.Query.start(Query.java:55)
+	at simpledb.systemtest.TransactionTest$XactionTester.run(TransactionTest.java:119)
+
+</error>
+  </testcase>
+</testrun>
