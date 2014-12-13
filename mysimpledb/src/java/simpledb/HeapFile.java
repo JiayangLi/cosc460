@@ -140,17 +140,20 @@ public class HeapFile implements DbFile {
         //no empty slot on any page, make a new page
         HeapPageId newPageId = new HeapPageId(getId(), pageNo);
         HeapPage newPage = new HeapPage(newPageId, HeapPage.createEmptyPageData());
+
+        synchronized (f){
+	        BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(f, true));
+	        bos.write(newPage.getPageData());
+	        bos.flush();
+	        bos.close();
+        }
         
-        Database.getBufferPool().getLockManager().acquireLock(newPageId, tid, Permissions.READ_WRITE);
-        
+        newPage = (HeapPage) Database.getBufferPool().getPage(tid, newPageId, Permissions.READ_WRITE);
+   
+        // return modified page
         newPage.insertTuple(t);
         rv.add(newPage); 
-        
-        //write to file
-//        OutputStream output = new BufferedOutputStream(new FileOutputStream(f, true));	
-//        output.write(newPage.getPageData());
-//        output.close();
-        
+                
         return rv;
     }
 

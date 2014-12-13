@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="LogRecoveryTest" project="mysimpledb" tests="10" started="10" failures="0" errors="1" ignored="0">
+  <testsuite name="simpledb.systemtest.LogRecoveryTest" time="2.868">
+    <testcase name="TestRepeatHistoryEvenAborts" classname="simpledb.systemtest.LogRecoveryTest" time="0.274"/>
+    <testcase name="TestRepeatHistoryEvenAborts2" classname="simpledb.systemtest.LogRecoveryTest" time="0.049">
+      <error>java.lang.RuntimeException: About to append to log file but not located at end of log!  Risk overwriting log data!
+	at simpledb.LogFile.preAppend(LogFile.java:135)
+	at simpledb.LogFile.logWrite(LogFile.java:244)
+	at simpledb.BufferPool.flushPage(BufferPool.java:301)
+	at simpledb.BufferPool.flushAllPages(BufferPool.java:267)
+	at simpledb.systemtest.LogTestBase.doInsert(LogTestBase.java:72)
+	at simpledb.systemtest.LogRecoveryTest.TestRepeatHistoryEvenAborts2(LogRecoveryTest.java:275)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+
+</error>
+    </testcase>
+    <testcase name="TestRepeatHistoryEvenRecovery" classname="simpledb.systemtest.LogRecoveryTest" time="0.299"/>
+    <testcase name="checkpointTest" classname="simpledb.systemtest.LogRecoveryTest" time="0.223"/>
+    <testcase name="TestAbortCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.234"/>
+    <testcase name="TestCommitAbortCommitCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.368"/>
+    <testcase name="TestOpenCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.212"/>
+    <testcase name="TestOpenCommitOpenCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.471"/>
+    <testcase name="TestOpenCommitCheckpointOpenCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.602"/>
+    <testcase name="TestCommitCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.135"/>
+  </testsuite>
+</testrun>

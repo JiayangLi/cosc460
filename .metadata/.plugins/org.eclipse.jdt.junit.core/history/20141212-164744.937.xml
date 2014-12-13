@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="TransactionTest (1)" project="mysimpledb" tests="4" started="4" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.systemtest.TransactionTest" time="11.087">
+    <testcase name="testSingleThread" classname="simpledb.systemtest.TransactionTest" time="0.143"/>
+    <testcase name="testTwoThreads" classname="simpledb.systemtest.TransactionTest" time="0.744"/>
+    <testcase name="testFiveThreads" classname="simpledb.systemtest.TransactionTest" time="2.987"/>
+    <testcase name="testTenThreads" classname="simpledb.systemtest.TransactionTest" time="7.213"/>
+  </testsuite>
+</testrun>

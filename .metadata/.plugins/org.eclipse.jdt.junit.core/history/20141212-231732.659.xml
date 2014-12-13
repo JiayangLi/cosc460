@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="LogRollbackTest" project="mysimpledb" tests="6" started="6" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.systemtest.LogRollbackTest" time="1.327">
+    <testcase name="TestRollback" classname="simpledb.systemtest.LogRollbackTest" time="0.21"/>
+    <testcase name="TestNoRollback" classname="simpledb.systemtest.LogRollbackTest" time="0.167"/>
+    <testcase name="TestRollbackWithOthers" classname="simpledb.systemtest.LogRollbackTest" time="0.235"/>
+    <testcase name="TestRollbackWithCheckPoint" classname="simpledb.systemtest.LogRollbackTest" time="0.323"/>
+    <testcase name="TestAbortCommitInterleaved" classname="simpledb.systemtest.LogRollbackTest" time="0.358"/>
+    <testcase name="TestFlushAll" classname="simpledb.systemtest.LogRollbackTest" time="0.034"/>
+  </testsuite>
+</testrun>

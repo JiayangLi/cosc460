@@ -5,17 +5,24 @@ Exercise 1.
 
 1. Briefly explain how logging is done in SimpleDB by describing when log records are written to the log.  Use Eclipse search tools to find all uses of the LogFile methods in the SimpleDB source code.
 
-    <Replace this text with your answer>
+     Log records are written to the log
+		- When a transaction is started, in Transaction.start()
+		- Before a page is flushed to disk, in BufferPool.flushPage()
+		- When a transaction is aborted, in Transaction.transactionComplete()
+		- When a transaction is committed, in Transaction.transactionComplete() 
 
 
 2. Where is LogFile.force called?  You should include usages inside other LogFile methods.  For each usage, why is it important that force is called?
 
-    <Replace this text with your answer>
-
+    - BufferPool.flushPage()
+    	to make sure that log captures a state that is compatible with the disk
+    - LogFile.logCommit(), LogFile.logAbort(), LogFile.logCheckpoint()
+    	to make sure these events are recorded on the disk, which would be needed for recovery from crashes
+    	
 
 3. Where is setBeforeImage image called?  
 
-    <Replace this text with your answer>
+    It's called in BufferPoll.transactionComplete() when a transcation commits.
 
 
 Exercise 4.
@@ -43,21 +50,21 @@ After you complete the lab, please answer the following questions.
 
 8. What is your name?  If you work with a partner, be sure to write both of your names.
 
-    <Replace this text with your answer>
+    Jiayang (JY) Li and David Huang
 
 9. What did you think of this assignment?
 
-    <Replace this text with your answer>
+    It is hard because completing this assignment makes a few previous tests fail, which was confusing
 
 10. What was the hardest part of this assignment?
 
-    <Replace this text with your answer>
+    Debugging...
 
 11. Describe any missing or incomplete elements of your code.
 
-    <Replace this text with your answer>
+    Should not be missing anything for recovery. 
 
 12. Roughly how long did you spend working on this lab?
 
-    <Replace this text with your answer>
+    Too long to remember...
 

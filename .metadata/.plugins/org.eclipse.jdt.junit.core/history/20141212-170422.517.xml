@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="simpledb" project="mysimpledb" tests="107" started="107" failures="7" errors="0" ignored="0">
+  <testsuite name="simpledb.JoinOptimizerTest" time="6.336">
+    <testcase name="nonequalityOrderJoinsTest" classname="simpledb.JoinOptimizerTest" time="0.475"/>
+    <testcase name="estimateJoinCostTest" classname="simpledb.JoinOptimizerTest" time="0.1"/>
+    <testcase name="estimateJoinCardinality" classname="simpledb.JoinOptimizerTest" time="0.087"/>
+    <testcase name="orderJoinsTest" classname="simpledb.JoinOptimizerTest" time="1.18"/>
+    <testcase name="bigOrderJoinsTest" classname="simpledb.JoinOptimizerTest" time="4.494"/>
+  </testsuite>
+  <testsuite name="simpledb.IntHistogramTest" time="0.164">
+    <testcase name="orderOfGrowthTest" classname="simpledb.IntHistogramTest" time="0.16"/>
+    <testcase name="opGreaterThanTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opGreaterThanOrEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opNotEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="uniformTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="uniformTestWithRange" classname="simpledb.IntHistogramTest" time="0.001"/>
+    <testcase name="testLargeLastBin" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="extraBuckets" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="negativeRangeTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opEqualsTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opLessThanTest" classname="simpledb.IntHistogramTest" time="0.0"/>
+    <testcase name="opLessThanOrEqualsTest" classname="simpledb.IntHistogramTest" time="0.003"/>
+  </testsuite>
+  <testsuite name="simpledb.HeapFileReadTest" time="0.008">
+    <testcase name="getTupleDesc" classname="simpledb.HeapFileReadTest" time="0.001"/>
+    <testcase name="numPages" classname="simpledb.HeapFileReadTest" time="0.0"/>
+    <testcase name="readPage" classname="simpledb.HeapFileReadTest" time="0.001"/>
+    <testcase name="testIteratorBasic" classname="simpledb.HeapFileReadTest" time="0.001"/>
+    <testcase name="testIteratorClose" classname="simpledb.HeapFileReadTest" time="0.002"/>
+    <testcase name="getId" classname="simpledb.HeapFileReadTest" time="0.003"/>
+  </testsuite>
+  <testsuite name="simpledb.LockingTest2" time="2.2">
+    <testcase name="acquireReadLocksOnSamePage" classname="simpledb.LockingTest2" time="0.234"/>
+    <testcase name="acquireReadWriteLocksOnSamePage" classname="simpledb.LockingTest2" time="0.212"/>
+    <testcase name="acquireWriteReadLocksOnSamePage" classname="simpledb.LockingTest2" time="0.211"/>
+    <testcase name="acquireReadWriteLocksOnTwoPages" classname="simpledb.LockingTest2" time="0.211"/>
+    <testcase name="acquireWriteLocksOnTwoPages" classname="simpledb.LockingTest2" time="0.211"/>
+    <testcase name="acquireReadLocksOnTwoPages" classname="simpledb.LockingTest2" time="0.211"/>
+    <testcase name="lockUpgrade" classname="simpledb.LockingTest2" time="0.323"/>
+    <testcase name="acquireWriteAndReadLocks" classname="simpledb.LockingTest2" time="0.244"/>
+    <testcase name="acquireThenRelease" classname="simpledb.LockingTest2" time="0.342"/>
+  </testsuite>
+  <testsuite name="simpledb.AggregateTest" time="0.011">
+    <testcase name="getTupleDesc" classname="simpledb.AggregateTest" time="0.005"/>
+    <testcase name="countStringAggregate" classname="simpledb.AggregateTest" time="0.002"/>
+    <testcase name="sumStringGroupBy" classname="simpledb.AggregateTest" time="0.001"/>
+    <testcase name="sumAggregate" classname="simpledb.AggregateTest" time="0.0"/>
+    <testcase name="avgAggregate" classname="simpledb.AggregateTest" time="0.001"/>
+    <testcase name="maxAggregate" classname="simpledb.AggregateTest" time="0.0"/>
+    <testcase name="minAggregate" classname="simpledb.AggregateTest" time="0.001"/>
+    <testcase name="rewind" classname="simpledb.AggregateTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.CatalogTest" time="0.003">
+    <testcase name="getTupleDesc" classname="simpledb.CatalogTest" time="0.001"/>
+    <testcase name="getDatabaseFile" classname="simpledb.CatalogTest" time="0.0"/>
+    <testcase name="getTableId" classname="simpledb.CatalogTest" time="0.002"/>
+  </testsuite>
+  <testsuite name="simpledb.TupleDescTest" time="0.016">
+    <testcase name="nameToId" classname="simpledb.TupleDescTest" time="0.012"/>
+    <testcase name="testEquals" classname="simpledb.TupleDescTest" time="0.001"/>
+    <testcase name="testToString" classname="simpledb.TupleDescTest" time="0.0"/>
+    <testcase name="testIterator" classname="simpledb.TupleDescTest" time="0.0"/>
+    <testcase name="numFields" classname="simpledb.TupleDescTest" time="0.001"/>
+    <testcase name="getFieldName" classname="simpledb.TupleDescTest" time="0.0"/>
+    <testcase name="combine" classname="simpledb.TupleDescTest" time="0.0"/>
+    <testcase name="getType" classname="simpledb.TupleDescTest" time="0.001"/>
+    <testcase name="getSize" classname="simpledb.TupleDescTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.TableStatsTest" time="0.478">
+    <testcase name="estimateScanCostTest" classname="simpledb.TableStatsTest" time="0.374"/>
+    <testcase name="estimateTableCardinalityTest" classname="simpledb.TableStatsTest" time="0.034"/>
+    <testcase name="estimateSelectivityTest" classname="simpledb.TableStatsTest" time="0.035"/>
+    <testcase name="numDistinctTest" classname="simpledb.TableStatsTest" time="0.035"/>
+  </testsuite>
+  <testsuite name="simpledb.FilterTest" time="0.002">
+    <testcase name="getTupleDesc" classname="simpledb.FilterTest" time="0.001"/>
+    <testcase name="filterSomeLessThan" classname="simpledb.FilterTest" time="0.0"/>
+    <testcase name="filterAllLessThan" classname="simpledb.FilterTest" time="0.0"/>
+    <testcase name="filterEqual" classname="simpledb.FilterTest" time="0.0"/>
+    <testcase name="filterEqualNoTuples" classname="simpledb.FilterTest" time="0.0"/>
+    <testcase name="rewind" classname="simpledb.FilterTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.PredicateTest" time="0.001">
+    <testcase name="filter" classname="simpledb.PredicateTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.HeapPageReadTest" time="0.001">
+    <testcase name="getNumEmptySlots" classname="simpledb.HeapPageReadTest" time="0.0"/>
+    <testcase name="testIterator" classname="simpledb.HeapPageReadTest" time="0.0"/>
+    <testcase name="getId" classname="simpledb.HeapPageReadTest" time="0.0"/>
+    <testcase name="getSlot" classname="simpledb.HeapPageReadTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.JoinPredicateTest" time="0.001">
+    <testcase name="filterVaryingVals" classname="simpledb.JoinPredicateTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.RecordIdTest" time="0.001">
+    <testcase name="getPageId" classname="simpledb.RecordIdTest" time="0.0"/>
+    <testcase name="tupleno" classname="simpledb.RecordIdTest" time="0.0"/>
+    <testcase name="hCode" classname="simpledb.RecordIdTest" time="0.001"/>
+    <testcase name="equals" classname="simpledb.RecordIdTest" time="0.0"/>
+  </testsuite>
+  <testsuite name="simpledb.LockingTest" time="0.693">
+    <testcase name="acquireWriteLocksOnTwoPages" classname="simpledb.LockingTest" time="0.188"/>
+    <testcase name="acquireThenRelease" classname="simpledb.LockingTest" time="0.291"/>
+    <testcase name="acquireWriteLocksOnSamePage" classname="simpledb.LockingTest" time="0.214"/>
+  </testsuite>
+  <testsuite name="simpledb.HeapPageIdTest" time="0.004">
+    <testcase name="getTableId" classname="simpledb.HeapPageIdTest" time="0.001"/>
+    <testcase name="pageno" classname="simpledb.HeapPageIdTest" time="0.0"/>
+    <testcase name="testHashCode" classname="simpledb.HeapPageIdTest" time="0.001"/>
+    <testcase name="equals" classname="simpledb.HeapPageIdTest" time="0.002"/>
+  </testsuite>
+  <testsuite name="simpledb.HeapPageWriteTest" time="0.027">
+    <testcase name="testDirty" classname="simpledb.HeapPageWriteTest" time="0.0"/>
+    <testcase name="addTuple" classname="simpledb.HeapPageWriteTest" time="0.026"/>
+    <testcase name="deleteNonexistentTuple" classname="simpledb.HeapPageWriteTest" time="0.001"/>
+    <testcase name="deleteTuple" classname="simpledb.HeapPageWriteTest" time="0.0"/>
+  </testsuite>
+  <testsuite name="simpledb.StringAggregatorTest" time="0.001">
+    <testcase name="testIterator" classname="simpledb.StringAggregatorTest" time="0.001"/>
+    <testcase name="mergeCount" classname="simpledb.StringAggregatorTest" time="0.0"/>
+  </testsuite>
+  <testsuite name="simpledb.DeadlockTest" time="0.112">
+    <testcase name="testUpgradeWriteDeadlock" classname="simpledb.DeadlockTest" time="0.043">
+      <failure>java.lang.AssertionError: expected:&lt;3&gt; but was:&lt;1&gt;
+	at org.junit.Assert.fail(Assert.java:91)
+	at org.junit.Assert.failNotEquals(Assert.java:618)
+	at org.junit.Assert.assertEquals(Assert.java:126)
+	at org.junit.Assert.assertEquals(Assert.java:443)
+	at org.junit.Assert.assertEquals(Assert.java:427)
+	at simpledb.DeadlockTest.setUp(DeadlockTest.java:44)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:27)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:39)
+	at org.junit.internal.runners.JUnit38ClassRunner.run(JUnit38ClassRunner.java:79)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+
+</failure>
+    </testcase>
+    <testcase name="testReadWriteDeadlock" classname="simpledb.DeadlockTest" time="0.034">
+      <failure>java.lang.AssertionError: expected:&lt;3&gt; but was:&lt;1&gt;
+	at org.junit.Assert.fail(Assert.java:91)
+	at org.junit.Assert.failNotEquals(Assert.java:618)
+	at org.junit.Assert.assertEquals(Assert.java:126)
+	at org.junit.Assert.assertEquals(Assert.java:443)
+	at org.junit.Assert.assertEquals(Assert.java:427)
+	at simpledb.DeadlockTest.setUp(DeadlockTest.java:44)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:27)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:39)
+	at org.junit.internal.runners.JUnit38ClassRunner.run(JUnit38ClassRunner.java:79)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+
+</failure>
+    </testcase>
+    <testcase name="testWriteWriteDeadlock" classname="simpledb.DeadlockTest" time="0.035">
+      <failure>java.lang.AssertionError: expected:&lt;3&gt; but was:&lt;1&gt;
+	at org.junit.Assert.fail(Assert.java:91)
+	at org.junit.Assert.failNotEquals(Assert.java:618)
+	at org.junit.Assert.assertEquals(Assert.java:126)
+	at org.junit.Assert.assertEquals(Assert.java:443)
+	at org.junit.Assert.assertEquals(Assert.java:427)
+	at simpledb.DeadlockTest.setUp(DeadlockTest.java:44)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:27)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:39)
+	at org.junit.internal.runners.JUnit38ClassRunner.run(JUnit38ClassRunner.java:79)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+
+</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="simpledb.JoinTest" time="0.002">
+    <testcase name="getTupleDesc" classname="simpledb.JoinTest" time="0.001"/>
+    <testcase name="eqJoin" classname="simpledb.JoinTest" time="0.0"/>
+    <testcase name="gtJoin" classname="simpledb.JoinTest" time="0.0"/>
+    <testcase name="rewind" classname="simpledb.JoinTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.InsertTest" time="0.002">
+    <testcase name="getTupleDesc" classname="simpledb.InsertTest" time="0.001"/>
+    <testcase name="getNext" classname="simpledb.InsertTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.TupleTest" time="0.001">
+    <testcase name="getTupleDesc" classname="simpledb.TupleTest" time="0.0"/>
+    <testcase name="testToString" classname="simpledb.TupleTest" time="0.001"/>
+    <testcase name="modifyFields" classname="simpledb.TupleTest" time="0.0"/>
+    <testcase name="modifyRecordId" classname="simpledb.TupleTest" time="0.0"/>
+  </testsuite>
+  <testsuite name="simpledb.HeapFileWriteTest" time="0.005">
+    <testcase name="addTuple" classname="simpledb.HeapFileWriteTest" time="0.005">
+      <failure>java.lang.AssertionError: expected:&lt;2&gt; but was:&lt;1&gt;
+	at org.junit.Assert.fail(Assert.java:91)
+	at org.junit.Assert.failNotEquals(Assert.java:618)
+	at org.junit.Assert.assertEquals(Assert.java:126)
+	at org.junit.Assert.assertEquals(Assert.java:443)
+	at org.junit.Assert.assertEquals(Assert.java:427)
+	at simpledb.HeapFileWriteTest.addTuple(HeapFileWriteTest.java:42)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:20)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:39)
+	at org.junit.internal.runners.JUnit38ClassRunner.run(JUnit38ClassRunner.java:79)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+
+</failure>
+    </testcase>
+  </testsuite>
+  <testsuite name="simpledb.IntegerAggregatorTest" time="0.001">
+    <testcase name="testIterator" classname="simpledb.IntegerAggregatorTest" time="0.0"/>
+    <testcase name="mergeSum" classname="simpledb.IntegerAggregatorTest" time="0.0"/>
+    <testcase name="mergeMin" classname="simpledb.IntegerAggregatorTest" time="0.0"/>
+    <testcase name="mergeMax" classname="simpledb.IntegerAggregatorTest" time="0.0"/>
+    <testcase name="mergeAvg" classname="simpledb.IntegerAggregatorTest" time="0.001"/>
+  </testsuite>
+  <testsuite name="simpledb.TransactionTest" time="0.105">
+    <testcase name="attemptTransactionTwice" classname="simpledb.TransactionTest" time="0.039">
+      <failure>java.lang.AssertionError: expected:&lt;3&gt; but was:&lt;1&gt;
+	at org.junit.Assert.fail(Assert.java:91)
+	at org.junit.Assert.failNotEquals(Assert.java:618)
+	at org.junit.Assert.assertEquals(Assert.java:126)
+	at org.junit.Assert.assertEquals(Assert.java:443)
+	at org.junit.Assert.assertEquals(Assert.java:427)
+	at simpledb.TransactionTest.setUp(TransactionTest.java:37)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:27)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:39)
+	at org.junit.internal.runners.JUnit38ClassRunner.run(JUnit38ClassRunner.java:79)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+
+</failure>
+    </testcase>
+    <testcase name="commitTransaction" classname="simpledb.TransactionTest" time="0.034">
+      <failure>java.lang.AssertionError: expected:&lt;3&gt; but was:&lt;1&gt;
+	at org.junit.Assert.fail(Assert.java:91)
+	at org.junit.Assert.failNotEquals(Assert.java:618)
+	at org.junit.Assert.assertEquals(Assert.java:126)
+	at org.junit.Assert.assertEquals(Assert.java:443)
+	at org.junit.Assert.assertEquals(Assert.java:427)
+	at simpledb.TransactionTest.setUp(TransactionTest.java:37)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:27)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:39)
+	at org.junit.internal.runners.JUnit38ClassRunner.run(JUnit38ClassRunner.java:79)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+
+</failure>
+    </testcase>
+    <testcase name="abortTransaction" classname="simpledb.TransactionTest" time="0.032">
+      <failure>java.lang.AssertionError: expected:&lt;3&gt; but was:&lt;1&gt;
+	at org.junit.Assert.fail(Assert.java:91)
+	at org.junit.Assert.failNotEquals(Assert.java:618)
+	at org.junit.Assert.assertEquals(Assert.java:126)
+	at org.junit.Assert.assertEquals(Assert.java:443)
+	at org.junit.Assert.assertEquals(Assert.java:427)
+	at simpledb.TransactionTest.setUp(TransactionTest.java:37)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:44)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:15)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:41)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:27)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:73)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:46)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:180)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:41)
+	at org.junit.runners.ParentRunner$1.evaluate(ParentRunner.java:173)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:28)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:31)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:220)
+	at junit.framework.JUnit4TestAdapter.run(JUnit4TestAdapter.java:39)
+	at org.junit.internal.runners.JUnit38ClassRunner.run(JUnit38ClassRunner.java:79)
+	at org.eclipse.jdt.internal.junit4.runner.JUnit4TestReference.run(JUnit4TestReference.java:50)
+	at org.eclipse.jdt.internal.junit.runner.TestExecution.run(TestExecution.java:38)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:459)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.runTests(RemoteTestRunner.java:675)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.run(RemoteTestRunner.java:382)
+	at org.eclipse.jdt.internal.junit.runner.RemoteTestRunner.main(RemoteTestRunner.java:192)
+
+</failure>
+    </testcase>
+  </testsuite>
+</testrun>

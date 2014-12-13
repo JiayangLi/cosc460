@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="LogRecoveryTest" project="mysimpledb" tests="10" started="10" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.systemtest.LogRecoveryTest" time="3.34">
+    <testcase name="TestRepeatHistoryEvenAborts" classname="simpledb.systemtest.LogRecoveryTest" time="0.324"/>
+    <testcase name="TestRepeatHistoryEvenAborts2" classname="simpledb.systemtest.LogRecoveryTest" time="0.381"/>
+    <testcase name="TestRepeatHistoryEvenRecovery" classname="simpledb.systemtest.LogRecoveryTest" time="0.279"/>
+    <testcase name="checkpointTest" classname="simpledb.systemtest.LogRecoveryTest" time="0.224"/>
+    <testcase name="TestAbortCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.256"/>
+    <testcase name="TestCommitAbortCommitCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.491"/>
+    <testcase name="TestOpenCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.256"/>
+    <testcase name="TestOpenCommitOpenCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.56"/>
+    <testcase name="TestOpenCommitCheckpointOpenCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.424"/>
+    <testcase name="TestCommitCrash" classname="simpledb.systemtest.LogRecoveryTest" time="0.146"/>
+  </testsuite>
+</testrun>

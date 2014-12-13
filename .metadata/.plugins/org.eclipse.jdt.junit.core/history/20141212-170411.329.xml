@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="JoinTest" project="mysimpledb" tests="4" started="4" failures="0" errors="0" ignored="0">
+  <testsuite name="simpledb.JoinTest" time="0.007">
+    <testcase name="eqJoin" classname="simpledb.JoinTest" time="0.005"/>
+    <testcase name="gtJoin" classname="simpledb.JoinTest" time="0.001"/>
+    <testcase name="getTupleDesc" classname="simpledb.JoinTest" time="0.001"/>
+    <testcase name="rewind" classname="simpledb.JoinTest" time="0.0"/>
+  </testsuite>
+</testrun>
